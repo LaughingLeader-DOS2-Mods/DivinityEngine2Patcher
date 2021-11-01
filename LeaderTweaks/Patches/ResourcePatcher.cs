@@ -20,12 +20,12 @@ namespace LeaderTweaks.Patches
 			var pt = typeof(ResourcePatcher);
 			var t1 = typeof(Resource);
 			var t3 = typeof(PhysicsResource);
-			harmony.Patch(AccessTools.Method(t1, "Valid"), postfix: new HarmonyMethod(AccessTools.Method(pt, "Valid")));
-			harmony.Patch(AccessTools.Method(t3, "ImageIndex"), postfix: new HarmonyMethod(AccessTools.Method(pt, "ImageIndex")));
-
-			var publicFuncFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public;
-			//Using the regular reflection method here since there's a static GetSingleFileName as well
-			harmony.Patch(t1.GetMethod("GetSingleFileName", publicFuncFlags), 
+			
+			harmony.Patch(AccessTools.PropertyGetter(t1, nameof(Resource.Valid)), 
+				postfix: new HarmonyMethod(AccessTools.Method(pt, "Valid")));
+			harmony.Patch(AccessTools.PropertyGetter(t3, nameof(PhysicsResource.ImageIndex)), 
+				postfix: new HarmonyMethod(AccessTools.Method(pt, "ImageIndex")));
+			harmony.Patch(AccessTools.Method(t1, nameof(Resource.GetSingleFileName), new Type[] { }), 
 				postfix: new HarmonyMethod(AccessTools.Method(pt, "GetSingleFileName")));
 		}
 
