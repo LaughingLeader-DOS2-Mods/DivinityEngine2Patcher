@@ -26,6 +26,9 @@
     <Reference Include="EoCPlugin">
       <HintPath>C:\DOS2DE_Engine\DefEd\EoCPlugin.dll</HintPath>
     </Reference>
+    <Reference Include="EoCPluginCSharp">
+      <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\EoCPluginCSharp.dll</HintPath>
+    </Reference>
     <Reference Include="LSCSharpCore">
       <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\LSCSharpCore.dll</HintPath>
     </Reference>
@@ -35,10 +38,16 @@
     <Reference Include="LSToolFramework">
       <HintPath>C:\DOS2DE_Engine\DefEd\LSToolFramework.dll</HintPath>
     </Reference>
+    <Reference Include="MessagePlugin">
+      <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\MessagePlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Synchronization">
       <HintPath>C:\DOS2DE_Engine\DefEd\Synchronization.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DllExport">

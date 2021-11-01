@@ -44,7 +44,7 @@ namespace Injector
             Process process = Process.Start("DivinityEngine2.exe");
      
             // Wait for the process to run
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
      
             IntPtr hProcess = OpenProcess(0x1F0FFF, 1, process.Id);
             IntPtr AllocMem = VirtualAllocEx(hProcess, IntPtr.Zero, bufferSize, 4096, 4);

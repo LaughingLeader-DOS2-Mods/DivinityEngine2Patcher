@@ -17,8 +17,8 @@ using LSToolFramework;
 
 namespace LeaderTweaks.Patches
 {
-	[HarmonyPatch(typeof(AddResourceWizard))]
-	public static class AddResourceWizardPatcher
+	[LeaderPatcher]
+	public class AddResourceWizardPatcher : IPatcher
 	{
 		static readonly MethodInfo m_ImportResource = AccessTools.Method(typeof(AddResourceWizard), "ImportResource");
 		static readonly FastInvokeHandler ImportResource = HarmonyLib.MethodInvoker.GetHandler(m_ImportResource);
@@ -38,7 +38,7 @@ namespace LeaderTweaks.Patches
 		static readonly MethodInfo m_BtnAddAnimationBlueprintClick = AccessTools.Method(typeof(AddResourceWizardPatcher), "BtnAddAnimationBlueprintClick");
 		static readonly MethodInfo m_BtnAddMeshProxyClick = AccessTools.Method(typeof(AddResourceWizardPatcher), "BtnAddMeshProxyClick");
 
-		public static void Init(Harmony harmony)
+		public void Init(Harmony harmony)
 		{
 			var t1 = typeof(AddResourceWizard);
 			var t2 = typeof(AddResourceWizardPatcher);
@@ -63,7 +63,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddModelClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddModelClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -112,7 +112,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddAnimationClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddAnimationClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -159,7 +159,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddPhysicsClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddPhysicsClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -206,7 +206,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddTextureClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddTextureClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -253,7 +253,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddScriptClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddScriptClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -300,7 +300,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddMaterialClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddMaterialClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -347,7 +347,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddEffectClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddEffectClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -394,7 +394,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddSoundClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddSoundClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -441,7 +441,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddAnimationBlueprintClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddAnimationBlueprintClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);
@@ -489,7 +489,7 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		public static void BtnAddMeshProxyClick(this AddResourceWizard me, object sender, EventArgs e)
+		public static void BtnAddMeshProxyClick(AddResourceWizard me, object sender, EventArgs e)
 		{
 			var m_CancelAll = (bool)f_m_CancelAll.GetValue(me);
 			var m_OkForAll = (bool)f_m_OkForAll.GetValue(me);

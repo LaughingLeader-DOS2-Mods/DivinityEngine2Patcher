@@ -12,10 +12,10 @@ using System.Text;
 
 namespace LeaderTweaks.Patches
 {
-	[HarmonyPatch(typeof(Resource))]
-	public static class ResourcePatcher
+	[LeaderPatcher]
+	public class ResourcePatcher : IPatcher
 	{
-		public static void Init(Harmony harmony)
+		public void Init(Harmony harmony)
 		{
 			var pt = typeof(ResourcePatcher);
 			var t1 = typeof(Resource);
