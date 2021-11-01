@@ -57,7 +57,7 @@ namespace LeaderTweaks
                     id = patcherDetails.ID;
                 }
                 patcher.Init(harmony);
-                Helper.Log($"Initialized [{id}].");
+                Helper.Log($"Initialized '{id}' patcher.");
             }
             catch(Exception ex)
 			{

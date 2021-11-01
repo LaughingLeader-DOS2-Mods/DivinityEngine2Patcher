@@ -12,7 +12,7 @@ using System.Text;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher]
+	[LeaderPatcher("Resource Fixes")]
 	public class ResourcePatcher : IPatcher
 	{
 		public void Init(Harmony harmony)

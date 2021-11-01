@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher]
+	[LeaderPatcher("Message Log")]
 	public class MessagePatcher : IPatcher
 	{
 		private static bool loaded = false;

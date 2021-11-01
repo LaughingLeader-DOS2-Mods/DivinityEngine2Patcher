@@ -17,7 +17,7 @@ using LSToolFramework;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher]
+	[LeaderPatcher("Resource Wizard")]
 	public class AddResourceWizardPatcher : IPatcher
 	{
 		static readonly MethodInfo m_ImportResource = AccessTools.Method(typeof(AddResourceWizard), "ImportResource");
