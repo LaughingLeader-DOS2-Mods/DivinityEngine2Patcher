@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeaderTweaks", "LeaderTweaks\LeaderTweaks.csproj", "{784D8E73-3177-4DE8-9D63-9D46FAB107BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Injector", "Injector\Injector.csproj", "{8D0D4B7F-8768-475C-AFB4-C832722057C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatchLoader", "PatchLoader\PatchLoader.csproj", "{8D0D4B7F-8768-475C-AFB4-C832722057C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
