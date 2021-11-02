@@ -101,7 +101,7 @@ namespace PatchLoader
                 // Dynamically load the DLL into our own process.
                 IntPtr patcher = Imports.LoadLibraryEx(path, IntPtr.Zero, LoadLibraryExFlags.DontResolveDllReferences);
                 // Get the address of our entry point.
-                IntPtr loadLibraryAnsiPtr = Imports.GetProcAddress(patcher, "LoadPlugin");
+                IntPtr loadLibraryAnsiPtr = Imports.GetProcAddress(patcher, "LoadEditorPatch");
                 if(loadLibraryAnsiPtr != IntPtr.Zero)
 				{
                     // Invoke the entry point in the remote process

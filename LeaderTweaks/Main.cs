@@ -1,7 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,31 +22,35 @@ namespace LeaderTweaks
 
         private static List<IPatcher> Patchers;
 
+        private static string executableDirectory = "";
+
         [DllExport]
-        public static void Init()
+        public static void LoadEditorPatch()
 		{
-            Console.WriteLine("INJECTED...");
+            Console.WriteLine("[LeaderTweaks] initializing...");
+            var pluginDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            executableDirectory = Directory.GetParentpluginDirectory).FullName;
 
-            harmony = new Harmony("laughingleader.editortweaks");
-            FileLog.logPath = @"C:\DOS2DE_Engine\DefEd\harmony.log";
-            System.IO.File.WriteAllText(FileLog.logPath, "");
-            Harmony.DEBUG = true;
-            harmony.CreateClassProcessor(typeof(Initializer)).Patch();
+            //Console.WriteLine(String.Join(";", assemblyDirectories));
+            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-            Patchers = new List<IPatcher>()
-            {
-                new AddResourceWizardPatcher(),
-                new ResourcePatcher(),
-                new ProjectPatcher(),
-                new MessagePatcher(),
-            };
+            harmony = new Harmony("laughingleader.leadertweaks");
+            FileLog.logPath = Path.Combine(pluginDirectory, "harmony.log");
+			System.IO.File.WriteAllText(FileLog.logPath, "");
+			Harmony.DEBUG = true;
+			harmony.CreateClassProcessor(typeof(Initializer)).Patch();
 
+            var pt = typeof(IPatcher);
+
+            Patchers = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && t.Namespace == "LeaderTweaks.Patches" && pt.IsAssignableFrom(t)).
+                Select(t => Activator.CreateInstance(t)).Cast<IPatcher>().ToList();
+            Console.WriteLine(String.Join(";", Patchers.Select(x => x.GetType().ToString())));
             Patchers.ForEach(LoadPatcher);
-            //FileLog.GetBuffer(true);
-            Helper.Log("All patches enabled!");
-        }
+			FileLog.GetBuffer(true);
+            Console.WriteLine("[LeaderTweaks] All patches enabled!");
+		}
 
-        static Type LeaderPatcherType = typeof(LeaderPatcherAttribute);
+		static Type LeaderPatcherType = typeof(LeaderPatcherAttribute);
 
         static void LoadPatcher(IPatcher patcher)
 		{
@@ -80,7 +86,9 @@ namespace LeaderTweaks
                 FileLog.Log(logMessage);
             }
 
-            if(displayInGame)
+            Console.WriteLine(logMessage);
+
+            if (displayInGame)
 			{
                 LSToolFramework.ToolFramework.Instance?.MessageService?.PostInfoMessage(logMessage);
 			}
