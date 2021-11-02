@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
+	<BaseOutputPath>$(ProjectDir)bin\</BaseOutputPath>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <DllExportIdent>A559BDBE-0816-49BD-AB4F-D28F173E2A52</DllExportIdent>
@@ -22,32 +24,51 @@
   <ItemGroup>
     <Reference Include="EditorFramework">
       <HintPath>C:\DOS2DE_Engine\DefEd\EditorFramework.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
     <Reference Include="EoCPlugin">
       <HintPath>C:\DOS2DE_Engine\DefEd\EoCPlugin.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
     <Reference Include="EoCPluginCSharp">
-      <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\EoCPluginCSharp.dll</HintPath>
+      <HintPath>C:\DOS2DE_Engine\DefEd\EoCPluginCSharp.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
     <Reference Include="LSCSharpCore">
-      <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\LSCSharpCore.dll</HintPath>
+      <HintPath>C:\DOS2DE_Engine\DefEd\LSCSharpCore.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
     <Reference Include="LSFrameworkPlugin">
       <HintPath>C:\DOS2DE_Engine\DefEd\LSFrameworkPlugin.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
     <Reference Include="LSToolFramework">
       <HintPath>C:\DOS2DE_Engine\DefEd\LSToolFramework.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
     <Reference Include="MessagePlugin">
-      <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\MessagePlugin.dll</HintPath>
+      <HintPath>C:\DOS2DE_Engine\DefEd\MessagePlugin.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationCore">
+      <CopyLocal>False</CopyLocal>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <CopyLocal>False</CopyLocal>
+    </Reference>
     <Reference Include="Synchronization">
       <HintPath>C:\DOS2DE_Engine\DefEd\Synchronization.dll</HintPath>
+      <CopyLocal>False</CopyLocal>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase" />
+    <Reference Include="System.Windows.Forms">
+      <CopyLocal>False</CopyLocal>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\..\..\DOS2DE_Engine\DefEd\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <CopyLocal>False</CopyLocal>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DllExport">
@@ -55,7 +76,10 @@
       <Visible>false</Visible>
       <Wz>1</Wz>
     </PackageReference>
-    <PackageReference Include="Lib.Harmony" Version="2.1.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+	  <PackageReference Include="Lib.Harmony" Version="2.1.1">
+		  <ExcludeAssets>runtime</ExcludeAssets>
+	  </PackageReference>
   </ItemGroup>
   <ImportGroup Label=".NET DllExport">
     <Import Project="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Condition="Exists($([MSBuild]::Escape('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')))" Label="8337224c9ad9e356" />
@@ -79,9 +103,52 @@
   </Target>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<ItemGroup>
-			<FilesToMove Include="$(OutputPath)LeaderTweaks.dll; $(OutputPath)LeaderTweaks.pdb; $(OutputPath)0Harmony.dll" />
+			<FilesToMove Include="$(OutputPath)*.dll; $(OutputPath)*.pdb" />
 		</ItemGroup>
 		<!--<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(SolutionDir)bin" OverwriteReadOnlyFiles="true" />-->
-		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="C:\DOS2DE_Engine\DefEd" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="C:\DOS2DE_Engine\DefEd\Patches" OverwriteReadOnlyFiles="true" />
 	</Target>
+	<ItemGroup>
+	  <Reference Update="System">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Core">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Data">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Drawing">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Numerics">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Runtime.Serialization">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Xml">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Update="System.Xml.Linq">
+	    <CopyLocal>False</CopyLocal>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Properties\" />
+	</ItemGroup>
 </Project>

@@ -18,21 +18,33 @@ namespace LeaderTweaks.Patches
 		public void Init(Harmony harmony)
 		{
 			var pt = typeof(ResourcePatcher);
-			var t1 = typeof(Resource);
-			var t3 = typeof(PhysicsResource);
 			
-			harmony.Patch(AccessTools.PropertyGetter(t1, nameof(Resource.Valid)), 
-				postfix: new HarmonyMethod(AccessTools.Method(pt, "Valid")));
-			harmony.Patch(AccessTools.PropertyGetter(t3, nameof(PhysicsResource.ImageIndex)), 
-				postfix: new HarmonyMethod(AccessTools.Method(pt, "ImageIndex")));
+			harmony.Patch(AccessTools.PropertyGetter(typeof(PhysicsResource), nameof(PhysicsResource.ImageIndex)), 
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.ImageIndex))));
+
+			var t1 = typeof(Resource);
+			harmony.Patch(AccessTools.PropertyGetter(t1, nameof(Resource.Valid)),
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.Valid))));
 			harmony.Patch(AccessTools.Method(t1, nameof(Resource.GetSingleFileName), new Type[] { }), 
-				postfix: new HarmonyMethod(AccessTools.Method(pt, "GetSingleFileName")));
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.GetSingleFileName))));
+			harmony.Patch(AccessTools.PropertyGetter(typeof(EditableObject), nameof(EditableObject.Inherited)), 
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.GetInherited))));
+
+			harmony.Patch(AccessTools.Method(typeof(ResourceBank), nameof(ResourceBank.Save)), 
+				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.OnResourceBankSave))));
+
+			harmony.Patch(AccessTools.Method(typeof(AnimationsDialog), "OnFindingResourceReferences"), 
+				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.OnFindingResourceReferences))));
 		}
 
 		public static void GetSingleFileName(ref string __result, Resource __instance)
 		{
 			if (!String.IsNullOrWhiteSpace(__instance.FileName))
 			{
+				if(!__instance.FileName.EndsWith(".lsf", StringComparison.OrdinalIgnoreCase))
+				{
+					__instance.FileName = Path.ChangeExtension(__instance.FileName, ".lsf");
+				}
 				__result = __instance.FileName;
 			}
 		}
@@ -54,6 +66,71 @@ namespace LeaderTweaks.Patches
 				__result = 0;
 			}
 			__result = 9;
+		}
+
+		//Fix local resources always being "inherited" (cannot delete), such as AnimationResource
+		public static void GetInherited(ref bool __result, EditableObject __instance, bool ___m_Inherited)
+		{
+			if (___m_Inherited)
+			{
+				var contentPath = ToolFramework.Instance.GameDataPath.Replace("/", "\\") + "Public\\" + ToolFramework.Instance.ModFolder + "\\Content";
+				if (!String.IsNullOrEmpty(__instance.FileName) && __instance.FileName.IsSubPathOf(contentPath))
+				{
+					__result = false;
+				}
+			}
+		}
+
+		/*
+		 * Fixes null reference exception when deleting visual/animation resources
+		 * Issue: Pane incorrectly assumes that it has a bound visual resource 
+		 * Code @ `AnimationsDialog.OnFindingResourceReferences` (replace method body)
+		 * Source: Norbyte
+		 */
+		public static bool OnFindingResourceReferences(IResource resource, ref List<IReference> out_Feedback, 
+			AnimationsDialog __instance, VisualResource ___m_VisualResource, Dictionary<string, List<MAnimationDesc>> ___m_Animations)
+		{
+			AnimationResource animationResource = resource as AnimationResource;
+			if (animationResource != null)
+			{
+				string b = animationResource.GUID.ToString();
+				foreach (KeyValuePair<string, List<MAnimationDesc>> keyValuePair in ___m_Animations)
+				{
+					List<MAnimationDesc>.Enumerator enumerator2 = keyValuePair.Value.GetEnumerator();
+					while (enumerator2.MoveNext())
+					{
+						if (enumerator2.Current.ResourceID == b)
+						{
+							out_Feedback.Add(new FormReference(__instance));
+							break;
+						}
+					}
+				}
+				//Disables the original method
+				return false;
+			}
+			VisualResource visualResource = resource as VisualResource;
+			if (visualResource != null && ___m_VisualResource != null && visualResource.GUID == ___m_VisualResource.GUID)
+			{
+				out_Feedback.Add(new FormReference(__instance));
+			}
+			//Disables the original method
+			return false;
+		}
+
+		//Making new resources be named Name_UUID.lsf by default
+		public static void OnResourceBankSave(ResourceBank __instance, Dictionary<System.Guid, Resource> ___m_Resources)
+		{
+			foreach(var resource in ___m_Resources.Values)
+			{
+				//New files only
+				if(resource.Dirty && !File.Exists(resource.FileName))
+				{
+					var resourceDir = Directory.GetParent(resource.FileName).FullName;
+					resource.FileName = Path.Combine(resourceDir, $"{resource.Name}_{resource.GUID}.lsf");
+					Helper.Log($"Renaming new resource to '{resource.FileName}' (Name_GUID), for sanity.");
+				}
+			}
 		}
 	}
 }

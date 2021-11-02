@@ -38,6 +38,29 @@ namespace LeaderTweaks.Patches
 		static readonly MethodInfo m_BtnAddAnimationBlueprintClick = AccessTools.Method(typeof(AddResourceWizardPatcher), "BtnAddAnimationBlueprintClick");
 		static readonly MethodInfo m_BtnAddMeshProxyClick = AccessTools.Method(typeof(AddResourceWizardPatcher), "BtnAddMeshProxyClick");
 
+		//static readonly Type EResourceTypeRef = AccessTools.TypeByName("ls.EResourceType");
+
+		enum ResourceType : UInt32
+		{
+			Model = 0U,
+			Animation = 2U,
+			Physics = 6U,
+			Texture = 4U,
+			Script = 8U,
+			Sound = 9U,
+			Material = 5U,
+			Effect = 7U,
+			Blueprint = 11U,
+			MeshProxy = 12U,
+		}
+
+		static object ToEResourceType (ResourceType resourceType)
+		{
+			Type EResourceTypeRef = AccessTools.TypeByName("ls.EResourceType");
+			var value = Convert.ChangeType(resourceType, EResourceTypeRef);
+			return value;
+		}
+
 		public void Init(Harmony harmony)
 		{
 			var t1 = typeof(AddResourceWizard);
@@ -97,12 +120,12 @@ namespace LeaderTweaks.Patches
 						if (!m_OkForAll)
 						{
 							//me.ImportResource((EResourceType)0U, fileName, new ImportResourceExtraData());
-							ImportResource(me, 0U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Model, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
 							//me.AutoImportResource((EResourceType)0U, fileName, new ImportResourceExtraData());
-							AutoImportResource(me, 0U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Model, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -145,11 +168,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 2U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Animation, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 2U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Animation, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -192,11 +215,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 6U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Physics, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 6U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Physics, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -239,11 +262,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 4U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Texture, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 4U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Texture, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -286,11 +309,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 8U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Script, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 8U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Script, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -333,11 +356,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 5U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Material, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 5U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Material, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -380,11 +403,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 7U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Effect, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 7U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Effect, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -427,11 +450,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 9U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.Sound, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 9U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.Sound, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
@@ -475,11 +498,11 @@ namespace LeaderTweaks.Patches
 						ImportResourceExtraData extraData = new ImportResourceExtraData();
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 11U, fileName, extraData);
+							ImportResource(me, ResourceType.Blueprint, fileName, extraData);
 						}
 						else
 						{
-							AutoImportResource(me, 11U, fileName, extraData);
+							AutoImportResource(me, ResourceType.Blueprint, fileName, extraData);
 						}
 						num++;
 					}
@@ -526,11 +549,11 @@ namespace LeaderTweaks.Patches
 						}
 						if (!m_OkForAll)
 						{
-							ImportResource(me, 12U, fileName, new ImportResourceExtraData());
+							ImportResource(me, ResourceType.MeshProxy, fileName, new ImportResourceExtraData());
 						}
 						else
 						{
-							AutoImportResource(me, 12U, fileName, new ImportResourceExtraData());
+							AutoImportResource(me, ResourceType.MeshProxy, fileName, new ImportResourceExtraData());
 						}
 						num++;
 					}
