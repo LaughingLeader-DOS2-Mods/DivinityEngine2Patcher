@@ -80,7 +80,7 @@ namespace PatchLoader
 
         public static List<string> GetPatches(string pluginsPath)
 		{
-            return Directory.EnumerateFiles(pluginsPath, "*.dll", SearchOption.AllDirectories).ToList();
+            return Directory.EnumerateFiles(pluginsPath, "*.Patch.dll", SearchOption.AllDirectories).ToList();
 		}
 
         private static bool TryLoadPatch(string exeDir, string path, Process process, IntPtr hProcess, IntPtr loadLibraryPtr)
