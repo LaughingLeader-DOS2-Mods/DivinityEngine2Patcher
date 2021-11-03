@@ -3,6 +3,7 @@
 		<TargetFramework>net40</TargetFramework>
 		<BaseOutputPath>$(ProjectDir)bin\</BaseOutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<Platform>x64</Platform>
 		<AssemblyName>LeaderTweaks.Patch</AssemblyName>
 		<Product>LeaderTweaks</Product>
 		<Authors>LaughingLeader</Authors>
@@ -23,6 +24,7 @@
 		<DllExportPatches>0</DllExportPatches>
 		<DllExportPreProcType>0</DllExportPreProcType>
 		<DllExportPostProcType>0</DllExportPostProcType>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup Label="References">
 		<Reference Include="../_EditorLib/*.dll">

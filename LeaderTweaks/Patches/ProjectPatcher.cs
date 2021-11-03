@@ -70,7 +70,7 @@ namespace LeaderTweaks.Patches
 		{
 			var code = new List<CodeInstruction>(instr);
 			int insertAt = -1;
-			for(int i = 0; i < code.Count; i++)
+			for (int i = 0; i < code.Count; i++)
 			{
 				if (code[i].opcode == OpCodes.Call && (MethodInfo)code[i].operand == add_Click)
 				{
@@ -81,18 +81,17 @@ namespace LeaderTweaks.Patches
 			if (insertAt > -1)
 			{
 				//Replacing the Click += OpenSettings code
-				code[insertAt-2] = new CodeInstruction(OpCodes.Call, m_ProjectAddClickEvent);
-				code[insertAt-1] = new CodeInstruction(OpCodes.Nop);
+				code[insertAt - 2] = new CodeInstruction(OpCodes.Call, m_ProjectAddClickEvent);
+				code[insertAt - 1] = new CodeInstruction(OpCodes.Nop);
 				code[insertAt] = new CodeInstruction(OpCodes.Nop);
 			}
-			
+
 			return code.AsEnumerable();
 		}
 
 		public static void ProjectPlugin_AddClickEvent(System.Windows.Forms.ToolStripItem toolStripItem, ProjectPlugin plugin)
 		{
 			Helper.Log("Added 'Click' event listener to project settings button.", false);
-			LSToolFramework.ToolFramework.Instance?.MessageService?.PostInfoMessage("[LeaderTweaks] Added 'Click' event listener to project settings button.");
 			toolStripItem.Click += (s, e) =>
 			{
 				if (LSToolFramework.ToolFramework.Instance != null && !String.IsNullOrWhiteSpace(LSToolFramework.ToolFramework.Instance.ModFolder))
@@ -107,7 +106,7 @@ namespace LeaderTweaks.Patches
 		{
 			var code = new List<CodeInstruction>(instr);
 			int insertAt = -1;
-			for(int i = 0; i < code.Count; i++)
+			for (int i = 0; i < code.Count; i++)
 			{
 				if (code[i].opcode == OpCodes.Call && (MethodInfo)code[i].operand == add_Click)
 				{
@@ -118,21 +117,20 @@ namespace LeaderTweaks.Patches
 			if (insertAt > -1)
 			{
 				//Replacing the Click += OpenSettings code
-				code[insertAt-2] = new CodeInstruction(OpCodes.Call, m_PublishAddClickEvent);
-				code[insertAt-1] = new CodeInstruction(OpCodes.Nop);
+				code[insertAt - 2] = new CodeInstruction(OpCodes.Call, m_PublishAddClickEvent);
+				code[insertAt - 1] = new CodeInstruction(OpCodes.Nop);
 				code[insertAt] = new CodeInstruction(OpCodes.Nop);
 			}
-			
+
 			return code.AsEnumerable();
 		}
 
 		public static void PublishPlugin_AddClickEvent(System.Windows.Forms.ToolStripItem toolStripItem, PublishPlugin plugin)
 		{
 			Helper.Log("Added 'Click' event listener to publish button.", false);
-			LSToolFramework.ToolFramework.Instance?.MessageService?.PostInfoMessage("[LeaderTweaks] Added 'Click' event listener to project settings button.");
-			toolStripItem.Click += (s,e) =>
+			toolStripItem.Click += (s, e) =>
 			{
-				if(LSToolFramework.ToolFramework.Instance != null && !String.IsNullOrWhiteSpace(LSToolFramework.ToolFramework.Instance.ModFolder))
+				if (LSToolFramework.ToolFramework.Instance != null && !String.IsNullOrWhiteSpace(LSToolFramework.ToolFramework.Instance.ModFolder))
 				{
 					RefreshMeta(s, e);
 				}
@@ -191,7 +189,7 @@ namespace LeaderTweaks.Patches
 					Helper.Log($"No file found at '${metaFilePath}'?", false);
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Helper.Log($"Error parsing meta.lsx: {ex}");
 			}
@@ -200,7 +198,7 @@ namespace LeaderTweaks.Patches
 		public static void GetSelectedWorkshopFeatureTags(ref List<EWorkshopFeatureTags> __result, PublishWindow __instance)
 		{
 			var settings = EoCPlugin.ModBackend.Instance?.ActiveSettings;
-			if(settings != null)
+			if (settings != null)
 			{
 				var t = typeof(EWorkshopFeatureTags);
 				var tags = settings.Tags.Split(';').Select(x => x.ToLower()).ToList();
@@ -209,7 +207,7 @@ namespace LeaderTweaks.Patches
 					if (tags.Contains(workshopTag.ToLower()))
 					{
 						EWorkshopFeatureTags enumValue = (EWorkshopFeatureTags)Enum.Parse(t, workshopTag);
-						if(!__result.Contains(enumValue))
+						if (!__result.Contains(enumValue))
 						{
 							__result.Add(enumValue);
 						}
@@ -221,25 +219,25 @@ namespace LeaderTweaks.Patches
 
 			var projectTagsFixed = __instance.ProjectTags.Distinct().OrderBy(x => Enum.GetName(t2, x));
 			__instance.ProjectTags.Clear();
-			foreach(var tag in projectTagsFixed)
+			foreach (var tag in projectTagsFixed)
 			{
 				__instance.ProjectTags.Add(tag);
 			}
 
-			Helper.Log($"GetSelectedWorkshopFeatureTags Result: {String.Join(",", __result)}");
-			Helper.Log($"GetSelectedWorkshopFeatureTags ProjectTags: {String.Join(",", __instance.ProjectTags)}");
+			Helper.Log($"GetSelectedWorkshopFeatureTags Result: {String.Join(",", __result)}", false);
+			Helper.Log($"GetSelectedWorkshopFeatureTags ProjectTags: {String.Join(",", __instance.ProjectTags)}", false);
 		}
 
 		public static void SetSelectedWorkshopFeatureTags(HashSet<EWorkshopFeatureTags> tags, PublishWindow __instance,
-			ToggleButton ___m_ArmorsTag, ToggleButton ___m_BalancingStatsTag, ToggleButton ___m_ClassesTag, 
-			ToggleButton ___m_CompanionsTag, ToggleButton ___m_ConsumablesTag, ToggleButton ___m_MapsTag, 
-			ToggleButton ___m_OriginsTag, ToggleButton ___m_OverhaulsTag, ToggleButton ___m_QualityOfLifeTag, 
-			ToggleButton ___m_QuestsTag, ToggleButton ___m_RacesTag, ToggleButton ___m_RunesBoostsTag, ToggleButton ___m_SkillsTag, 
+			ToggleButton ___m_ArmorsTag, ToggleButton ___m_BalancingStatsTag, ToggleButton ___m_ClassesTag,
+			ToggleButton ___m_CompanionsTag, ToggleButton ___m_ConsumablesTag, ToggleButton ___m_MapsTag,
+			ToggleButton ___m_OriginsTag, ToggleButton ___m_OverhaulsTag, ToggleButton ___m_QualityOfLifeTag,
+			ToggleButton ___m_QuestsTag, ToggleButton ___m_RacesTag, ToggleButton ___m_RunesBoostsTag, ToggleButton ___m_SkillsTag,
 			ToggleButton ___m_UtilityTag, ToggleButton ___m_VisualOverridesTag, ToggleButton ___m_WeaponsTag)
 		{
 			List<EWorkshopFeatureTags> foundTags = new List<EWorkshopFeatureTags>();
 			var settings = EoCPlugin.ModBackend.Instance?.ActiveSettings;
-			if(settings != null)
+			if (settings != null)
 			{
 				var t = typeof(EWorkshopFeatureTags);
 				var stringTags = settings.Tags.Split(';').Select(x => x.ToLower()).ToList();
@@ -248,7 +246,7 @@ namespace LeaderTweaks.Patches
 					if (stringTags.Contains(workshopTag.ToLower()))
 					{
 						EWorkshopFeatureTags enumValue = (EWorkshopFeatureTags)Enum.Parse(t, workshopTag);
-						if(!foundTags.Contains(enumValue))
+						if (!foundTags.Contains(enumValue))
 						{
 							foundTags.Add(enumValue);
 						}
@@ -277,13 +275,13 @@ namespace LeaderTweaks.Patches
 
 			var projectTagsFixed = __instance.ProjectTags.Distinct().OrderBy(x => Enum.GetName(t2, x));
 			__instance.ProjectTags.Clear();
-			foreach(var tag in projectTagsFixed)
+			foreach (var tag in projectTagsFixed)
 			{
 				__instance.ProjectTags.Add(tag);
 			}
 
-			Helper.Log($"SetSelectedWorkshopFeatureTags Result: {String.Join(",", foundTags)}");
-			Helper.Log($"SetSelectedWorkshopFeatureTags ProjectTags: {String.Join(",", __instance.ProjectTags)}");
+			Helper.Log($"SetSelectedWorkshopFeatureTags Result: {String.Join(",", foundTags)}", false);
+			Helper.Log($"SetSelectedWorkshopFeatureTags ProjectTags: {String.Join(",", __instance.ProjectTags)}", false);
 		}
 	}
 }
