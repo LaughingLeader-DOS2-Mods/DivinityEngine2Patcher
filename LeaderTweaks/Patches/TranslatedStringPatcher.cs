@@ -11,7 +11,7 @@ using System.Text;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("Localization Tweakes", DebugOnly = true)]
+	[LeaderPatcher("Localization Tweaks", DebugOnly = true)]
 	public class TranslatedStringPatcher : IPatcher
 	{
 		public void Init(Harmony harmony)
@@ -20,7 +20,7 @@ namespace LeaderTweaks.Patches
 
 			harmony.Patch(AccessTools.PropertySetter(typeof(MTranslatedString), nameof(MTranslatedString.Content)),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(TranslatedStringPatcher.SetTranslatedStringContent))));
-			
+
 			harmony.Patch(AccessTools.Method(typeof(TranslatedStringKeyPlugin), nameof(TranslatedStringKeyPlugin.Import)),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(TranslatedStringPatcher.OnTranslatedStringKeyPluginImport))));
 
