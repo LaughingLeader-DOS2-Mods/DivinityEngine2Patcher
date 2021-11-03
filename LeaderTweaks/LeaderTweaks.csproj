@@ -101,6 +101,6 @@
 			<FilesToMove Include="$(OutputPath)*.dll; $(OutputPath)*.pdb" />
 		</ItemGroup>
 		<!--<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(SolutionDir)bin" OverwriteReadOnlyFiles="true" />-->
-		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(DOS2DE_ENGINE_PATH)Patches" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(DOS2DE_ENGINE_PATH)\Patches" OverwriteReadOnlyFiles="true" />
 	</Target>
 </Project>

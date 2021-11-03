@@ -8,11 +8,17 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using EoCPlugin;
+
 using HarmonyLib;
 
 using LeaderTweaks.Patches;
 
+using LSFrameworkPlugin;
+
 using LSToolFramework;
+
+using UiLibrary;
 
 namespace LeaderTweaks
 {
@@ -29,7 +35,7 @@ namespace LeaderTweaks
 		{
             Console.WriteLine("[LeaderTweaks] initializing...");
             var pluginDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            executableDirectory = Directory.GetParentpluginDirectory).FullName;
+            executableDirectory = Directory.GetParent(pluginDirectory).FullName;
 
             //Console.WriteLine(String.Join(";", assemblyDirectories));
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
@@ -38,7 +44,8 @@ namespace LeaderTweaks
             FileLog.logPath = Path.Combine(pluginDirectory, "harmony.log");
 			System.IO.File.WriteAllText(FileLog.logPath, "");
 			Harmony.DEBUG = true;
-			harmony.CreateClassProcessor(typeof(Initializer)).Patch();
+			//harmony.CreateClassProcessor(typeof(Initializer)).Patch();
+			//harmony.CreateClassProcessor(typeof(KeyboardEventHooks)).Patch();
 
             var pt = typeof(IPatcher);
 
@@ -98,11 +105,36 @@ namespace LeaderTweaks
     [HarmonyPatch]
     class Initializer
     {
+        static readonly MethodInfo m_GenerateWwiseVoiceProject = AccessTools.Method(typeof(EoCPluginClass), "GenerateWwiseVoiceProject");
+        static readonly FastInvokeHandler GenerateWwiseVoiceProject = HarmonyLib.MethodInvoker.GetHandler(m_GenerateWwiseVoiceProject);
+
         [HarmonyPatch(typeof(EoCPlugin.EoCPluginClass), "OnModuleLoaded", MethodType.Normal)]
         [HarmonyPostfix]
-        public static void OnModuleLoaded()
+        public static void OnModuleLoaded(EoCPluginClass __instance)
         {
             Helper.Log("Module loaded.", false);
+
+            //GenerateWwiseVoiceProject.Invoke(__instance, null, EventArgs.Empty);
+
+            //EoCPluginClass plugin = MacrosHelper.GetPlugin<EoCPluginClass>();
         }
     }
+
+    [HarmonyPatch(typeof(MNETWindowManager))]
+    class KeyboardEventHooks
+    {
+        [HarmonyPatch("ReceiveKeyDownEvent")]
+        [HarmonyPostfix]
+        public static void ReceiveKeyDownEvent(System.Windows.Forms.KeyEventArgs e, MNETWindowManager __instance)
+        {
+            
+        }
+
+        [HarmonyPatch("ReceiveKeyUpEvent")]
+        [HarmonyPostfix]
+        public static void ReceiveKeyUpEvent(System.Windows.Forms.KeyEventArgs e, MNETWindowManager __instance)
+        {
+            
+        }
+	}
 }
