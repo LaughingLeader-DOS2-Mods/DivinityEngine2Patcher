@@ -27,7 +27,7 @@ This panel will now load after a project is loaded, allowing you to make changes
 
 ### Panel Tweaks
 
-The "Eyes of a Child" game window is now renamed to simply "Game", taking up much less tab space.
+The "Eyes of a Child" game window is now renamed to simply "Game", taking up significantly less tab space.
 
 ### Animation Preview Window Tweaks
 
