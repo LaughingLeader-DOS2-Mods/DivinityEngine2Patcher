@@ -55,7 +55,6 @@ namespace LeaderTweaks.Patches
 		//Shorten the Eyes of a Child text
 		public static void OnPanelServiceSetTitle(FrameworkElement content, ref string title)
 		{
-			Helper.Log($"OnPanelServiceSetTitle: {title}");
 			if (title.Contains("Eyes of"))
 			{
 				title = "Game";
@@ -67,13 +66,13 @@ namespace LeaderTweaks.Patches
 			Helper.Log($"DockContentDescriptionConstructor: {title}");
 		}
 
-		public static void OnPanelServiceAddPanel(FrameworkElement panel, ref string title, EDockState dockState, 
+		public static void OnPanelServiceAddPanel(FrameworkElement panel, ref string title, EDockState dockState,
 			PanelService __instance)
 		{
 			Helper.Log($"OnPanelServiceAddPanel: {title}");
 		}
 
-		public static void OnPanelServiceAddPanel2(DockContentControl panel, EDockState dockState, 
+		public static void OnPanelServiceAddPanel2(DockContentControl panel, EDockState dockState,
 			PanelService __instance)
 		{
 			Helper.Log($"OnPanelServiceAddPanel2: {panel.Text}");
@@ -127,7 +126,7 @@ namespace LeaderTweaks.Patches
 
 			public override string ToString()
 			{
-				return String.Join("\n\t", new string[]{ $"Title: {Title}", $"Width: {Width}", $"Height: {Height}", $"HideOnClose: {HideOnClose}" });
+				return String.Join("\n\t", new string[] { $"Title: {Title}", $"Width: {Width}", $"Height: {Height}", $"HideOnClose: {HideOnClose}" });
 			}
 
 			//public DockContentDescription(DockContentControl content, string title)

@@ -127,9 +127,11 @@ namespace LeaderTweaks.Patches
 		{
 			new Regex("filename \".*\" does not exist, can't load mod!", defaultRO),
 			new Regex("Failed to load (pak file|the pack file)", defaultRO),
-			new Regex("OsiToolsConfig.json'!", defaultRO),
+			new Regex("Packed file corrupt", defaultRO),
+			new Regex("Trying to open.*OsiToolsConfig", defaultRO),
 			new Regex("No valid displayname for status", defaultRO),
 			new Regex(@"\[eoc::GetStatusTranslatedName\]", defaultRO),
+			new Regex("does not have a race", defaultRO),
 		};
 
 		public static bool AddMessage(string msg, EMessageType type, EMessageCategory cat, string extrainfo, bool persistent,
