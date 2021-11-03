@@ -30,6 +30,29 @@ namespace LeaderTweaks
 
         private static string executableDirectory = "";
 
+        private static readonly Type LeaderPatcherType = typeof(LeaderPatcherAttribute);
+        private static readonly Type IPatcherType = typeof(IPatcher);
+
+        private static bool CanActivatePatcher(Type t)
+		{
+            if(t.IsClass && t.Namespace == "LeaderTweaks.Patches" && IPatcherType.IsAssignableFrom(t))
+			{
+                LeaderPatcherAttribute patcherDetails = Attribute.GetCustomAttribute(t, LeaderPatcherType) as LeaderPatcherAttribute;
+                if (patcherDetails != null)
+                {
+#if !DEBUG
+                    if(patcherDetails.DebugOnly)
+					{
+                        return false;
+					}
+#endif
+                    return patcherDetails.Enabled;
+                }
+                return true;
+            }
+            return false;
+		}
+
         [DllExport]
         public static void LoadEditorPatch()
 		{
@@ -49,15 +72,12 @@ namespace LeaderTweaks
 
             var pt = typeof(IPatcher);
 
-            Patchers = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && t.Namespace == "LeaderTweaks.Patches" && pt.IsAssignableFrom(t)).
+            Patchers = Assembly.GetExecutingAssembly().GetTypes().Where(t => CanActivatePatcher(t)).
                 Select(t => Activator.CreateInstance(t)).Cast<IPatcher>().ToList();
-            Console.WriteLine(String.Join(";", Patchers.Select(x => x.GetType().ToString())));
             Patchers.ForEach(LoadPatcher);
 			FileLog.GetBuffer(true);
             Console.WriteLine("[LeaderTweaks] All patches enabled!");
 		}
-
-		static Type LeaderPatcherType = typeof(LeaderPatcherAttribute);
 
         static void LoadPatcher(IPatcher patcher)
 		{
@@ -68,9 +88,17 @@ namespace LeaderTweaks
                 if (patcherDetails != null)
                 {
                     id = patcherDetails.ID;
+                    if(patcherDetails.Enabled)
+					{
+                        patcher.Init(harmony);
+                        Helper.Log($"Initialized '{id}' patcher.");
+                    }
                 }
-                patcher.Init(harmony);
-                Helper.Log($"Initialized '{id}' patcher.");
+                else
+				{
+                    patcher.Init(harmony);
+                    Helper.Log($"Initialized '{id}' patcher.");
+				}
             }
             catch(Exception ex)
 			{

@@ -37,6 +37,7 @@ namespace LeaderTweaks.Patches
 				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.OnFindingResourceReferences))));
 		}
 
+		//Fixes resources always being saved as GUID.lsf, ignoring their current filename.
 		public static void GetSingleFileName(ref string __result, Resource __instance)
 		{
 			if (!String.IsNullOrWhiteSpace(__instance.FileName))
@@ -71,10 +72,10 @@ namespace LeaderTweaks.Patches
 		//Fix local resources always being "inherited" (cannot delete), such as AnimationResource
 		public static void GetInherited(ref bool __result, EditableObject __instance, bool ___m_Inherited)
 		{
-			if (___m_Inherited)
+			if (___m_Inherited && !String.IsNullOrEmpty(__instance.FileName))
 			{
 				var contentPath = ToolFramework.Instance.GameDataPath.Replace("/", "\\") + "Public\\" + ToolFramework.Instance.ModFolder + "\\Content";
-				if (!String.IsNullOrEmpty(__instance.FileName) && __instance.FileName.IsSubPathOf(contentPath))
+				if (__instance.FileName.IsSubPathOf(contentPath))
 				{
 					__result = false;
 				}
