@@ -6,14 +6,22 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-inline bool ends_with(std::string const& value, std::string const& ending)
+void Print(auto arg)
 {
-	if (ending.size() > value.size()) return false;
-	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+#if DEBUG
+	cout << arg << endl;
+#endif
 }
 
-string patches_dir = "Patches";
-string patch_ext = ".Patch.dll";
+
+bool ends_with(string const& value, string const& ending)
+{
+	if (ending.size() > value.size()) return false;
+	return equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+const string patches_dir = "Patches";
+const string patch_ext = ".Patch.dll";
 
 DWORD WINAPI LoadPatches(LPVOID param)
 {
@@ -24,24 +32,24 @@ DWORD WINAPI LoadPatches(LPVOID param)
 		auto p = entry.path().string();
 		if (ends_with(p, patch_ext))
 		{
-			cout << "[PatchLoader] Loading patch " + p << endl;
+			Print("[PatchLoader] Loading patch " + p);
 			auto handle = LoadLibraryW(entry.path().wstring().c_str());
 			if (handle)
 			{
 				auto pMain = GetProcAddress(handle, "LoadEditorPatch");
 				if (pMain)
 				{
-					cout << "[PatchLoader] Initializing patch " + p << endl;
+					Print("[PatchLoader] Initializing patch " + p);
 					pMain();
 				}
 				else
 				{
-					cout << "[PatchLoader] LoadEditorPatch not found in patch." << endl;
+					Print("[PatchLoader] LoadEditorPatch not found in patch.");
 				}
 			}
 			else
 			{
-				cout << "[PatchLoader] Failed to load patch " + p << endl;
+				Print("[PatchLoader] Failed to load patch " + p);
 			}
 		}
 	}

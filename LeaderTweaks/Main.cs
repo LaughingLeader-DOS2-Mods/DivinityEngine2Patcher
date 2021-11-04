@@ -41,9 +41,9 @@ namespace LeaderTweaks
 				if (patcherDetails != null)
 				{
 #if !DEBUG
-                    if(patcherDetails.DebugOnly)
+					if (patcherDetails.DebugOnly)
 					{
-                        return false;
+						return false;
 					}
 #endif
 					return patcherDetails.Enabled;
@@ -67,9 +67,17 @@ namespace LeaderTweaks
 			FileLog.logPath = Path.Combine(pluginDirectory, "harmony.log");
 			System.IO.File.WriteAllText(FileLog.logPath, "");
 			Harmony.DEBUG = true;
-			//harmony.CreateClassProcessor(typeof(Initializer)).Patch();
-			//harmony.CreateClassProcessor(typeof(KeyboardEventHooks)).Patch();
 
+			harmony.CreateClassProcessor(typeof(Initializer)).Patch();
+			//harmony.CreateClassProcessor(typeof(KeyboardEventHooks)).Patch();
+		}
+
+		static bool _initialized = false;
+
+		public static void InitializePatcher()
+		{
+			if (_initialized)
+				return;
 			var pt = typeof(IPatcher);
 
 			Patchers = Assembly.GetExecutingAssembly().GetTypes().Where(CanActivatePatcher).
@@ -84,6 +92,7 @@ namespace LeaderTweaks
 			{
 				Console.WriteLine("[LeaderTweaks] No patches enabled.");
 			}
+			_initialized = true;
 		}
 
 		static void LoadPatcher(IPatcher patcher)
@@ -144,6 +153,15 @@ namespace LeaderTweaks
 			//GenerateWwiseVoiceProject.Invoke(__instance, null, EventArgs.Empty);
 
 			//EoCPluginClass plugin = MacrosHelper.GetPlugin<EoCPluginClass>();
+		}
+
+		//We load all the various patchers here since it's when all services/plugins should be ready, when the project browser window opens.
+		//Without this, getting a System.AccessViolationException is likely
+		[HarmonyPatch(typeof(EoCPlugin.ProjectPlugin), "Start", MethodType.Normal)]
+		[HarmonyPostfix]
+		public static void OnEngineStarted()
+		{
+			Main.InitializePatcher();
 		}
 	}
 
