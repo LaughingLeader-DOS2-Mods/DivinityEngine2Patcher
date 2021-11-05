@@ -1,113 +1,113 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
-    <BaseOutputPath>$(ProjectDir)bin\</BaseOutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AssemblyName>LeaderTweaks.Patch</AssemblyName>
-    <Product>LeaderTweaks</Product>
-    <Authors>LaughingLeader</Authors>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <DebugType>none</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DllExportIdent>A559BDBE-0816-49BD-AB4F-D28F173E2A52</DllExportIdent>
-    <DllExportMetaLibName>DllExport.dll</DllExportMetaLibName>
-    <DllExportNamespace>LeaderTweaks</DllExportNamespace>
-    <DllExportDDNSCecil>true</DllExportDDNSCecil>
-    <PlatformTarget>x64</PlatformTarget>
-    <DllExportOrdinalsBase>1</DllExportOrdinalsBase>
-    <DllExportGenExpLib>false</DllExportGenExpLib>
-    <DllExportOurILAsm>false</DllExportOurILAsm>
-    <DllExportSysObjRebase>false</DllExportSysObjRebase>
-    <DllExportLeaveIntermediateFiles>false</DllExportLeaveIntermediateFiles>
-    <DllExportTimeout>30000</DllExportTimeout>
-    <DllExportPeCheck>2</DllExportPeCheck>
-    <DllExportPatches>0</DllExportPatches>
-    <DllExportPreProcType>0</DllExportPreProcType>
-    <DllExportPostProcType>0</DllExportPostProcType>
-  </PropertyGroup>
-  <ItemGroup Label="References">
-    <Reference Include="../_EditorLib/*.dll">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="PresentationCore">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="WindowsBase">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Core">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Data">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Drawing">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Numerics">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Runtime.Serialization">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Xml">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Update="System.Xml.Linq">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DllExport">
-      <Version>1.7.4</Version>
-      <Visible>false</Visible>
-      <Wz>1</Wz>
-    </PackageReference>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
-    <PackageReference Include="Lib.Harmony" Version="2.1.1">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <ItemGroup>
-      <FilesToMove Include="$(OutputPath)*.dll; $(OutputPath)*.pdb" />
-    </ItemGroup>
-    <!--<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(SolutionDir)bin" OverwriteReadOnlyFiles="true" />-->
-    <Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(DOS2DE_ENGINE_PATH)\Patches" OverwriteReadOnlyFiles="true" />
-    <Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(SolutionDir)\bin\Patches" OverwriteReadOnlyFiles="true" />
-  </Target>
-  <ImportGroup Label=".NET DllExport">
-    <Import Project="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Condition="Exists($([MSBuild]::Escape('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')))" Label="8337224c9ad9e356" />
-  </ImportGroup>
-  <Target Name="DllExportRestorePkg" BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('$(SolutionDir)DllExport.bat')" Text="DllExport.bat is not found. Path: '$(SolutionDir)' - https://github.com/3F/DllExport" />
-    <Exec Condition="('$(DllExportModImported)' != 'true' Or !Exists('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')) And Exists('$(SolutionDir)DllExport.bat')" Command=".\DllExport.bat  -action Restore" WorkingDirectory="$(SolutionDir)" />
-    <MSBuild Condition="'$(DllExportModImported)' != 'true'" Projects="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Targets="DllExportMetaXBaseTarget" Properties="TargetFramework=$(TargetFramework)">
-      <Output TaskParameter="TargetOutputs" PropertyName="DllExportMetaXBase" />
-    </MSBuild>
-    <ItemGroup>
-      <Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
-        <HintPath>$(SolutionDir)packages\DllExport.1.7.4\gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
-        <Private>False</Private>
-        <SpecificVersion>False</SpecificVersion>
-      </Reference>
-    </ItemGroup>
-  </Target>
-  <Target Name="DllExportRPkgDynamicImport" BeforeTargets="PostBuildEvent" DependsOnTargets="GetFrameworkPaths" Condition="'$(DllExportModImported)' != 'true' And '$(DllExportRPkgDyn)' != 'false'">
-    <MSBuild BuildInParallel="true" UseResultsCache="true" Projects="$(MSBuildProjectFullPath)" Properties="DllExportRPkgDyn=true" Targets="Build" />
-  </Target>
+	<PropertyGroup>
+		<TargetFramework>net40</TargetFramework>
+		<BaseOutputPath>$(ProjectDir)bin\</BaseOutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AssemblyName>LeaderTweaks.Patch</AssemblyName>
+		<Product>LeaderTweaks</Product>
+		<Authors>LaughingLeader</Authors>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DllExportIdent>A559BDBE-0816-49BD-AB4F-D28F173E2A52</DllExportIdent>
+		<DllExportMetaLibName>DllExport.dll</DllExportMetaLibName>
+		<DllExportNamespace>LeaderTweaks</DllExportNamespace>
+		<DllExportDDNSCecil>true</DllExportDDNSCecil>
+		<PlatformTarget>x64</PlatformTarget>
+		<DllExportOrdinalsBase>1</DllExportOrdinalsBase>
+		<DllExportGenExpLib>false</DllExportGenExpLib>
+		<DllExportOurILAsm>false</DllExportOurILAsm>
+		<DllExportSysObjRebase>false</DllExportSysObjRebase>
+		<DllExportLeaveIntermediateFiles>false</DllExportLeaveIntermediateFiles>
+		<DllExportTimeout>30000</DllExportTimeout>
+		<DllExportPeCheck>2</DllExportPeCheck>
+		<DllExportPatches>0</DllExportPatches>
+		<DllExportPreProcType>0</DllExportPreProcType>
+		<DllExportPostProcType>0</DllExportPostProcType>
+	</PropertyGroup>
+	<ItemGroup Label="References">
+		<Reference Include="../_EditorLib/*.dll">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Include="PresentationCore">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Include="PresentationFramework">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Include="System.Windows.Forms">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Include="WindowsBase">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Core">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Data">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Drawing">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Numerics">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Runtime.Serialization">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Xml">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+		<Reference Update="System.Xml.Linq">
+			<CopyLocal>False</CopyLocal>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DllExport">
+			<Version>1.7.4</Version>
+			<Visible>false</Visible>
+			<Wz>1</Wz>
+		</PackageReference>
+		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+		<PackageReference Include="Lib.Harmony" Version="2.1.1">
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<FilesToMove Include="$(OutputPath)*.dll; $(OutputPath)*.pdb" />
+		</ItemGroup>
+		<!--<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(SolutionDir)bin" OverwriteReadOnlyFiles="true" />-->
+		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(DOS2DE_ENGINE_PATH)\Patches" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(SolutionDir)\bin\Patches" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<ImportGroup Label=".NET DllExport">
+		<Import Project="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Condition="Exists($([MSBuild]::Escape('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')))" Label="8337224c9ad9e356" />
+	</ImportGroup>
+	<Target Name="DllExportRestorePkg" BeforeTargets="PrepareForBuild">
+		<Error Condition="!Exists('$(SolutionDir)DllExport.bat')" Text="DllExport.bat is not found. Path: '$(SolutionDir)' - https://github.com/3F/DllExport" />
+		<Exec Condition="('$(DllExportModImported)' != 'true' Or !Exists('$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets')) And Exists('$(SolutionDir)DllExport.bat')" Command=".\DllExport.bat  -action Restore" WorkingDirectory="$(SolutionDir)" />
+		<MSBuild Condition="'$(DllExportModImported)' != 'true'" Projects="$(SolutionDir)packages\DllExport.1.7.4\tools\net.r_eg.DllExport.targets" Targets="DllExportMetaXBaseTarget" Properties="TargetFramework=$(TargetFramework)">
+			<Output TaskParameter="TargetOutputs" PropertyName="DllExportMetaXBase" />
+		</MSBuild>
+		<ItemGroup>
+			<Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
+				<HintPath>$(SolutionDir)packages\DllExport.1.7.4\gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
+				<Private>False</Private>
+				<SpecificVersion>False</SpecificVersion>
+			</Reference>
+		</ItemGroup>
+	</Target>
+	<Target Name="DllExportRPkgDynamicImport" BeforeTargets="PostBuildEvent" DependsOnTargets="GetFrameworkPaths" Condition="'$(DllExportModImported)' != 'true' And '$(DllExportRPkgDyn)' != 'false'">
+		<MSBuild BuildInParallel="true" UseResultsCache="true" Projects="$(MSBuildProjectFullPath)" Properties="DllExportRPkgDyn=true" Targets="Build" />
+	</Target>
 </Project>
