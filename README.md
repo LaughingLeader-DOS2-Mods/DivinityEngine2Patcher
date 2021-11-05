@@ -1,6 +1,10 @@
 # The Divinity Engine 2 Patcher
 
-This is both a patch injector, and a collection of patches/fixes (LeaderTweaks.Patch.dll).
+This is both a patch injector (DxgiNext.dll), and a collection of patches/fixes (LeaderTweaks.Patch.dll).
+
+## Requirements
+
+Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/releases/latest).
 
 ## Leader Tweaks Fixes/Changes
 
