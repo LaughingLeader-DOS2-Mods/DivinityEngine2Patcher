@@ -4,6 +4,8 @@
 		<BaseOutputPath>$(ProjectDir)bin\</BaseOutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>LeaderTweaks.Patch</AssemblyName>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<Version>1.0.1-alpha</Version>
 		<Product>LeaderTweaks</Product>
 		<Authors>LaughingLeader</Authors>
 	</PropertyGroup>
