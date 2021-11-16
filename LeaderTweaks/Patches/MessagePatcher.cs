@@ -126,7 +126,7 @@ namespace LeaderTweaks.Patches
 		static readonly List<Regex> IgnoreMessages = new List<Regex>()
 		{
 			new Regex("filename \".*\" does not exist, can't load mod!", defaultRO),
-			new Regex("Failed to load (pak file|the pack file)", defaultRO),
+			new Regex("Failed to load (add-on|pak file|the pack file)", defaultRO),
 			new Regex("Packed file corrupt", defaultRO),
 			new Regex("Trying to open.*OsiToolsConfig", defaultRO),
 			new Regex("No valid displayname for status", defaultRO),
