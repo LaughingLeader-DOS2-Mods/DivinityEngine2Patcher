@@ -6,6 +6,10 @@ This is both a patch injector (DxgiNext.dll), and a collection of patches/fixes 
 
 Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/releases/latest).
 
+## Installation
+
+[Check the releases section for an installation guide.](https://github.com/LaughingLeader-DOS2-Mods/DivinityEngine2Patcher/releases)
+
 ## Leader Tweaks Fixes/Changes
 
 ### Add Resource Wizard (Content Browser)
