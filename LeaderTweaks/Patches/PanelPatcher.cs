@@ -101,7 +101,7 @@ namespace LeaderTweaks.Patches
 		 * Fixes the wall construction create panel
 		 * Source: Norbyte
 		*/
-		public static void LevelPlugin_ExportSelectedToRootTemplate_Fix(object A_0, EventArgs A_1)
+		public static void LevelPlugin_ExportSelectedToRootTemplate_Fix(object sender, MouseEventArgs e)
 		{
 			CreateWallConstructionWizardPanel();
 		}
