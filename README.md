@@ -33,7 +33,11 @@ Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/release
 
 ### Panel Tweaks
 
-The "Eyes of a Child" game window is now renamed to simply "Game", taking up significantly less tab space.
+* The "Eyes of a Child" game window is now renamed to simply "Game", taking up significantly less tab space.
+* Incorporated Norbyte's fixes, including:
+  * Fixed the Wall Construction Wizard.
+  * Fixed the "Create Prefab" option in the context menu.
+  * Added a "Tile Set" button to the Tile Set Editor dialog.
 
 ### Project Tweaks
 
