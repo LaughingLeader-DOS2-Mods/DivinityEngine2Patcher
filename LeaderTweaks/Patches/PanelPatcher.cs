@@ -50,60 +50,84 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		static readonly PropertyInfo p_EntityPanel = AccessTools.Property(typeof(EntityPanel), "Controller");
-		static readonly PropertyInfo p_m_lstPalettes = AccessTools.Property(typeof(EntityPanel), "m_lstPalettes");
-
-		private static void CreateWallConstructionWizardPanel()
-		{
-			PanelService service = ToolFramework.Instance.ServiceManagerInstance.GetService<PanelService>();
-			if (service != null)
-			{
-				if (service.GetPanel<CreateWallConstructionWizard>() == null)
-				{
-					WallConstructionPanel wallPanel = service.GetPanel<WallConstructionPanel>();
-					if (wallPanel != null)
-					{
-						EntityPanel.DBListView m_lstPalettes = p_m_lstPalettes.GetValue(wallPanel, null) as EntityPanel.DBListView;
-						EntityController controller = p_EntityPanel.GetValue(wallPanel, null) as EntityController;
-						if (controller != null && m_lstPalettes != null)
-						{
-							ListViewItem listViewItem = m_lstPalettes.Items[m_lstPalettes.SelectedIndices[0]];
-							MWallConstruction construction = controller.Objects[(Guid)listViewItem.Tag] as MWallConstruction;
-							CreateWallConstructionWizard panel = new CreateWallConstructionWizard(construction);
-							service.AddPanel(panel, EDockState.Float);
-							service.Show(panel);
-						}
-					}
-				}
-			}
-		}
-
 		/* 
 		 * Fixes "Create Prefab" option in the context menu
 		 * Issue: Panel not added to panel manager service before it is shown
 		 * Source: Norbyte
 		*/
-		public static void PrefabPlugin_CreatePrefabClicked_Fix(object sender, MouseEventArgs e)
+		public static bool PrefabPlugin_CreatePrefabClicked_Fix(object sender, MouseEventArgs e)
 		{
-			CreateWallConstructionWizardPanel();
+			PanelService service = ToolFramework.Instance.ServiceManagerInstance.GetService<PanelService>();
+			if (service != null)
+			{
+				CreatePrefabWizard panel = new CreatePrefabWizard();
+				service.AddPanel(panel, EDockState.Float);
+				service.Show(panel);
+			}
+			return true;
 		}
+
+		static readonly PropertyInfo p_EntityPanel = AccessTools.Property(typeof(EntityPanel), "Controller");
+		static readonly PropertyInfo p_m_lstPalettes = AccessTools.Property(typeof(EntityPanel), "m_lstPalettes");
 
 		/* 
 		 * Fixes the wall construction create panel
 		 * Source: Norbyte
 		*/
-		public static void WallConstructionPanel_CreateRootTemplateClick_Fix(object A_0, EventArgs A_1)
+		public bool WallConstructionPanel_CreateRootTemplateClick_Fix(object A_0, EventArgs A_1, WallConstructionPanel __instance)
 		{
-			CreateWallConstructionWizardPanel();
+			try
+			{
+				PanelService service = ToolFramework.Instance?.ServiceManagerInstance?.GetService<PanelService>();
+				if (service != null)
+				{
+					if (service.GetPanel<CreateWallConstructionWizard>() == null)
+					{
+						WallConstructionPanel wallPanel = service.GetPanel<WallConstructionPanel>();
+						if (wallPanel != null)
+						{
+							EntityPanel.DBListView m_lstPalettes = p_m_lstPalettes.GetValue(wallPanel, null) as EntityPanel.DBListView;
+							EntityController controller = p_EntityPanel.GetValue(wallPanel, null) as EntityController;
+							if (controller != null && m_lstPalettes != null)
+							{
+								ListViewItem listViewItem = m_lstPalettes.Items[m_lstPalettes.SelectedIndices[0]];
+								MWallConstruction construction = controller.Objects[(Guid)listViewItem.Tag] as MWallConstruction;
+								CreateWallConstructionWizard panel = new CreateWallConstructionWizard(construction);
+								service.AddPanel(panel, EDockState.Float);
+								service.Show(panel);
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Helper.Log($"Error creating wall construction panel:\n{ex}");
+			}
+			return true;
 		}
 
 		/* 
-		 * Fixes the wall construction create panel
+		 * Fixes 'Export To RootTemplate' by making sure the panel is created.
 		 * Source: Norbyte
 		*/
-		public static void LevelPlugin_ExportSelectedToRootTemplate_Fix(object sender, MouseEventArgs e)
+		public static bool LevelPlugin_ExportSelectedToRootTemplate_Fix(object sender, MouseEventArgs e)
 		{
-			CreateWallConstructionWizardPanel();
+			if (SelectionManager.Instance.CurrentSelection.Count == 1)
+			{
+				MGameObjectTemplate mgameObjectTemplate = (MGameObjectTemplate)SelectionManager.Instance.CurrentSelection[0];
+				if (mgameObjectTemplate != null && !mgameObjectTemplate.IsRootTemplate())
+				{
+					PanelService service = ToolFramework.Instance.ServiceManagerInstance.GetService<PanelService>();
+					if (service != null)
+					{
+						CreateObjectWizard panel = new CreateObjectWizard(mgameObjectTemplate);
+						service.AddPanel(panel, EDockState.Float);
+						service.Show(panel);
+					}
+				}
+			}
+			return true;
 		}
 
 		/* 
