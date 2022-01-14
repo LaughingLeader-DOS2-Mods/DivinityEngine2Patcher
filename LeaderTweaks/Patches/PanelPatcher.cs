@@ -64,7 +64,7 @@ namespace LeaderTweaks.Patches
 				service.AddPanel(panel, EDockState.Float);
 				service.Show(panel);
 			}
-			return true;
+			return false;
 		}
 
 		static readonly PropertyInfo p_EntityPanel = AccessTools.Property(typeof(EntityPanel), "Controller");
@@ -74,37 +74,30 @@ namespace LeaderTweaks.Patches
 		 * Fixes the wall construction create panel
 		 * Source: Norbyte
 		*/
-		public bool WallConstructionPanel_CreateRootTemplateClick_Fix(object A_0, EventArgs A_1, WallConstructionPanel __instance)
+		public static bool WallConstructionPanel_CreateRootTemplateClick_Fix(object A_0, EventArgs A_1, WallConstructionPanel __instance)
 		{
-			try
+			PanelService service = ToolFramework.Instance?.ServiceManagerInstance?.GetService<PanelService>();
+			if (service != null)
 			{
-				PanelService service = ToolFramework.Instance?.ServiceManagerInstance?.GetService<PanelService>();
-				if (service != null)
+				if (service.GetPanel<CreateWallConstructionWizard>() == null)
 				{
-					if (service.GetPanel<CreateWallConstructionWizard>() == null)
+					WallConstructionPanel wallPanel = service.GetPanel<WallConstructionPanel>();
+					if (wallPanel != null)
 					{
-						WallConstructionPanel wallPanel = service.GetPanel<WallConstructionPanel>();
-						if (wallPanel != null)
+						EntityPanel.DBListView m_lstPalettes = p_m_lstPalettes.GetValue(wallPanel, null) as EntityPanel.DBListView;
+						EntityController controller = p_EntityPanel.GetValue(wallPanel, null) as EntityController;
+						if (controller != null && m_lstPalettes != null)
 						{
-							EntityPanel.DBListView m_lstPalettes = p_m_lstPalettes.GetValue(wallPanel, null) as EntityPanel.DBListView;
-							EntityController controller = p_EntityPanel.GetValue(wallPanel, null) as EntityController;
-							if (controller != null && m_lstPalettes != null)
-							{
-								ListViewItem listViewItem = m_lstPalettes.Items[m_lstPalettes.SelectedIndices[0]];
-								MWallConstruction construction = controller.Objects[(Guid)listViewItem.Tag] as MWallConstruction;
-								CreateWallConstructionWizard panel = new CreateWallConstructionWizard(construction);
-								service.AddPanel(panel, EDockState.Float);
-								service.Show(panel);
-							}
+							ListViewItem listViewItem = m_lstPalettes.Items[m_lstPalettes.SelectedIndices[0]];
+							MWallConstruction construction = controller.Objects[(Guid)listViewItem.Tag] as MWallConstruction;
+							CreateWallConstructionWizard panel = new CreateWallConstructionWizard(construction);
+							service.AddPanel(panel, EDockState.Float);
+							service.Show(panel);
 						}
 					}
 				}
 			}
-			catch (Exception ex)
-			{
-				Helper.Log($"Error creating wall construction panel:\n{ex}");
-			}
-			return true;
+			return false;
 		}
 
 		/* 
@@ -127,7 +120,7 @@ namespace LeaderTweaks.Patches
 					}
 				}
 			}
-			return true;
+			return false;
 		}
 
 		/* 
