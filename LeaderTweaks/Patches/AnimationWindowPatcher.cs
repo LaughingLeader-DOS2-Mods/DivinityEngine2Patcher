@@ -19,6 +19,10 @@ using System.Xml.XPath;
 using System.Runtime.InteropServices;
 using Synchronization.Controls;
 
+using LeaderTweaks.Win32.Constants;
+using LeaderTweaks.Win32;
+using LSToolFramework;
+
 namespace LeaderTweaks.Patches
 {
 	[LeaderPatcher("Animation Window Fixes")]
@@ -48,6 +52,8 @@ namespace LeaderTweaks.Patches
 
 			harmony.Patch(AccessTools.Method(t_AnimationsDialog, "InitializeComponent"),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.TweakAnimationPreviewWindow))));
+			harmony.Patch(AccessTools.Method(t_AnimationsDialog, "EnsureAnimationsPreviewPanelCreated"),
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.AnimationsDialog_DisableTopMost))));
 
 			var typeArgs = new Type[] { typeof(Dictionary<string, List<MAnimationDesc>>), typeof(VisualResource) };
 			harmony.Patch(AccessTools.Method(t_AnimationsDialog, nameof(AnimationsDialog.Load), typeArgs),
@@ -111,29 +117,46 @@ namespace LeaderTweaks.Patches
 			}
 		}
 
-		private static readonly IntPtr HWND_BOTTOM = new IntPtr(0);
-		private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-		private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-		private const UInt32 SWP_NOSIZE = 0x0001;
-		private const UInt32 SWP_NOMOVE = 0x0002;
-		private const UInt32 WIN_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
-
-		[DllImport("user32.dll")]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+		static readonly FieldInfo f_m_AnimationPreviewPanel = AccessTools.Field(typeof(AnimationsDialog), "m_AnimationPreviewPanel");
+		static readonly SetWindowPosFlags PreviewFlags = SetWindowPosFlags.IgnoreMove | SetWindowPosFlags.DoNotReposition | SetWindowPosFlags.IgnoreResize;
 
 		// Makes the window not stay on top of absolutely everything
 		public static void TweakAnimationPreviewWindow(AnimationsDialog __instance)
 		{
-			__instance.Activated += (s, e) =>
+			if (__instance is System.Windows.Forms.Form form)
 			{
-				__instance.TopMost = false;
-			};
-			__instance.LostFocus += (s, e) =>
+				form.Load += (s, e) =>
+				{
+					if (s is System.Windows.Forms.Form sendingForm)
+					{
+						sendingForm.TopMost = false;
+						sendingForm.MaximizeBox = true;
+						sendingForm.MinimizeBox = true;
+					}
+
+					var previewPanel = f_m_AnimationPreviewPanel.GetValue(s);
+					if (previewPanel != null && previewPanel is DockContent m_AnimationPreviewPanel)
+					{
+						m_AnimationPreviewPanel.TopMost = false;
+					}
+
+					//User32.SetWindowPos(__instance.Handle, HWND.NoTopMost, 0, 0, 0, 0, PreviewFlags);
+				};
+			}
+		}
+
+		// Makes the window not stay on top of absolutely everything
+		public static void AnimationsDialog_DisableTopMost(AnimationsDialog __instance, PreviewPanelToDockContentAdapter<AnimationPreviewPanel> ___m_AnimationPreviewPanel)
+		{
+			__instance.TopMost = false;
+			__instance.MaximizeBox = true;
+			__instance.MinimizeBox = true;
+			if (___m_AnimationPreviewPanel != null)
 			{
-				SetWindowPos(__instance.Handle, HWND_BOTTOM, 0, 0, 0, 0, WIN_FLAGS);
-				__instance.SendToBack();
-			};
+				___m_AnimationPreviewPanel.TopMost = false;
+			}
+
+			//User32.SetWindowPos(__instance.Handle, HWND.NoTopMost, 0, 0, 0, 0, PreviewFlags);
 		}
 
 		// Defaults to a proxymesh preview visual so you can see the timeline
