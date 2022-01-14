@@ -35,13 +35,13 @@ namespace LeaderTweaks.Patches
 			harmony.Patch(AccessTools.Method(t_AnimationPreviewToolPanel, nameof(AnimationPreviewToolPanel.StoreInitAnim)),
 				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.StoreInitAnimFix))));
 
-			harmony.Patch(AccessTools.Method(t_AnimationPreviewToolPanel, "InitializeComponent"),
-				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.AnimationPreviewToolPanelInitialize))));
-
+			//Adding textkeys with right click fixes
+			harmony.Patch(AccessTools.Method(t_AnimationPreviewToolPanel, "SetAnimationInternal"),
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.AnimationPreviewToolPanel_EnableTrackControls))));
+			harmony.Patch(AccessTools.Method(t_AnimationPreviewToolPanel, nameof(AnimationPreviewToolPanel.RefreshControls)),
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.AnimationPreviewToolPanel_EnableTrackControls))));
 			harmony.Patch(AccessTools.PropertyGetter(typeof(SynchTrackControl), nameof(SynchTrackControl.Changeable)),
 				transpiler: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.t_SynchTrackControl_Changeable))));
-			harmony.Patch(AccessTools.Method(typeof(SynchTrackControl), "ElementTrackControl_MouseDown"),
-				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.SynchTrackControl_ElementTrackControl_MouseDown))));
 
 			harmony.Patch(AccessTools.Method(t_AnimationsDialog, nameof(AnimationsDialog.HasDirtyAnimations)),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.HasDirtyAnimations))));
@@ -55,12 +55,12 @@ namespace LeaderTweaks.Patches
 		}
 
 		static readonly FieldInfo f_m_ReadOnly = AccessTools.Field(t_AnimationPreviewToolPanel, "m_ReadOnly");
+		static readonly FieldInfo f_m_AnimationControl = AccessTools.Field(t_AnimationPreviewToolPanel, "m_AnimationControl");
 
 		// Fixes animations being set as "read only", which then prevents adding textkeys.
-		public static void AnimationPreviewToolPanelInitialize(AnimationPreviewToolPanel __instance)
+		public static void AnimationPreviewToolPanel_EnableTrackControls(SynchControl ___m_AnimationControl)
 		{
-			f_m_ReadOnly.SetValue(__instance, false);
-			Helper.Log($"AnimationPreviewToolPanel.m_ReadOnly = {f_m_ReadOnly.GetValue(__instance)}");
+			___m_AnimationControl.SetTrackControlsEnabled(true);
 		}
 
 		// Fixes animations being set as "read only", which then prevents adding textkeys.
@@ -68,13 +68,6 @@ namespace LeaderTweaks.Patches
 		{
 			yield return new CodeInstruction(OpCodes.Ldc_I4_1);
 			yield return new CodeInstruction(OpCodes.Ret);
-		}
-
-
-		// Fixes animations being set as "read only", which then prevents adding textkeys.
-		public static void SynchTrackControl_ElementTrackControl_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e, SynchTrackControl __instance)
-		{
-			Helper.Log($"SynchTrackControl.Changeable = {__instance.Changeable}");
 		}
 
 		/*
