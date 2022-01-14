@@ -54,6 +54,8 @@ namespace LeaderTweaks.Patches
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.TweakAnimationPreviewWindow))));
 			harmony.Patch(AccessTools.Method(t_AnimationsDialog, "EnsureAnimationsPreviewPanelCreated"),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.AnimationsDialog_DisableTopMost))));
+			harmony.Patch(AccessTools.Method(typeof(ContentBrowser), "ResourceOpenHandler"),
+				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(AnimationWindowPatcher.ContentBrowser_AnimationsDialog_DisableTopMost))));
 
 			var typeArgs = new Type[] { typeof(Dictionary<string, List<MAnimationDesc>>), typeof(VisualResource) };
 			harmony.Patch(AccessTools.Method(t_AnimationsDialog, nameof(AnimationsDialog.Load), typeArgs),
@@ -118,45 +120,41 @@ namespace LeaderTweaks.Patches
 		}
 
 		static readonly FieldInfo f_m_AnimationPreviewPanel = AccessTools.Field(typeof(AnimationsDialog), "m_AnimationPreviewPanel");
+		//static readonly FieldInfo f_m_Instance = AccessTools.Field(typeof(AnimationsDialog), "m_Instance");
+
 		static readonly SetWindowPosFlags PreviewFlags = SetWindowPosFlags.IgnoreMove | SetWindowPosFlags.DoNotReposition | SetWindowPosFlags.IgnoreResize;
 
 		// Makes the window not stay on top of absolutely everything
 		public static void TweakAnimationPreviewWindow(AnimationsDialog __instance)
 		{
-			if (__instance is System.Windows.Forms.Form form)
+			__instance.TopMost = false;
+
+			__instance.Activated += (s, e) =>
 			{
-				form.Load += (s, e) =>
-				{
-					if (s is System.Windows.Forms.Form sendingForm)
-					{
-						sendingForm.TopMost = false;
-						sendingForm.MaximizeBox = true;
-						sendingForm.MinimizeBox = true;
-					}
+				__instance.TopMost = false;
 
-					var previewPanel = f_m_AnimationPreviewPanel.GetValue(s);
-					if (previewPanel != null && previewPanel is DockContent m_AnimationPreviewPanel)
-					{
-						m_AnimationPreviewPanel.TopMost = false;
-					}
-
-					//User32.SetWindowPos(__instance.Handle, HWND.NoTopMost, 0, 0, 0, 0, PreviewFlags);
-				};
-			}
+				//var previewPanel = f_m_AnimationPreviewPanel.GetValue(s);
+				//if (previewPanel != null && previewPanel is DockContent m_AnimationPreviewPanel)
+				//{
+				//	m_AnimationPreviewPanel.TopMost = false;
+				//}
+			};
+			//User32.SetWindowPos(__instance.Handle, HWND.NoTopMost, 0, 0, 0, 0, PreviewFlags);
 		}
 
-		// Makes the window not stay on top of absolutely everything
-		public static void AnimationsDialog_DisableTopMost(AnimationsDialog __instance, PreviewPanelToDockContentAdapter<AnimationPreviewPanel> ___m_AnimationPreviewPanel)
+		public static void AnimationsDialog_DisableTopMost(AnimationsDialog __instance)
 		{
 			__instance.TopMost = false;
-			__instance.MaximizeBox = true;
-			__instance.MinimizeBox = true;
-			if (___m_AnimationPreviewPanel != null)
-			{
-				___m_AnimationPreviewPanel.TopMost = false;
-			}
+		}
 
-			//User32.SetWindowPos(__instance.Handle, HWND.NoTopMost, 0, 0, 0, 0, PreviewFlags);
+		public static void ContentBrowser_AnimationsDialog_DisableTopMost(object A_0, EventArgs A_1)
+		{
+			//Get the private static variable since GetInstance() will create it otherwise.
+			var instance = Traverse.Create(typeof(AnimationsDialog)).Field("m_Instance").GetValue() as AnimationsDialog;
+			if (instance != null)
+			{
+				instance.TopMost = false;
+			}
 		}
 
 		// Defaults to a proxymesh preview visual so you can see the timeline
