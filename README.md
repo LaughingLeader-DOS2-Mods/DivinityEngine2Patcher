@@ -38,6 +38,7 @@ Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/release
 * Incorporated Norbyte's fixes, including:
   * Fixed the Wall Construction Wizard.
   * Fixed the "Create Prefab" option in the context menu.
+  * Fixed the "Export Selection to Root Template" option in the context menu.
   * Added a "Tile Set" button to the Tile Set Editor dialog.
 
 ### Project Tweaks
