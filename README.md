@@ -24,6 +24,7 @@ Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/release
 * Fixed the window assuming animation changes have taken place when the animation resource is null (i.e. it asking you to save changes that don't exist).
 * Made the window stop always being on top of everything when it loses focus.
 * If no preview visual is set, the window will now load the default human male proxymesh visual, allowing you to always see the timeline / animation duration.
+* Textkeys can now always be added to animations.
 
 ### Message Tweaks
 
