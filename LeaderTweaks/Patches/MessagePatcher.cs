@@ -132,6 +132,7 @@ namespace LeaderTweaks.Patches
 			new Regex("No valid displayname for status", defaultRO),
 			new Regex(@"\[eoc::GetStatusTranslatedName\]", defaultRO),
 			new Regex("does not have a race", defaultRO),
+			new Regex(".*networkfixedstrings.*", defaultRO),
 		};
 
 		public static bool AddMessage(string msg, EMessageType type, EMessageCategory cat, string extrainfo, bool persistent,
