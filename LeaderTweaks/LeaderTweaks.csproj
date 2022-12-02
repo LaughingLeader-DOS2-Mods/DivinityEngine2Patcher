@@ -4,16 +4,17 @@
 		<BaseOutputPath>$(ProjectDir)bin\</BaseOutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AssemblyName>LeaderTweaks.Patch</AssemblyName>
-		<AssemblyVersion>1.0.0.2</AssemblyVersion>
+		<AssemblyVersion>1.0.2.0</AssemblyVersion>
 		<Version>1.0.2-alpha</Version>
 		<Product>LeaderTweaks</Product>
 		<Authors>LaughingLeader</Authors>
-	</PropertyGroup>
-	<PropertyGroup>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
 		<DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+	  <DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup>
 		<DllExportIdent>A559BDBE-0816-49BD-AB4F-D28F173E2A52</DllExportIdent>
@@ -31,6 +32,8 @@
 		<DllExportPatches>0</DllExportPatches>
 		<DllExportPreProcType>0</DllExportPreProcType>
 		<DllExportPostProcType>0</DllExportPostProcType>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<Copyright>Copyright © LaughingLeader 2022</Copyright>
 	</PropertyGroup>
 	<ItemGroup Label="References">
 		<Reference Include="../_EditorLib/*.dll">
