@@ -56,7 +56,8 @@ namespace LeaderTweaks
 		[DllExport]
 		public static void LoadEditorPatch()
 		{
-			Console.WriteLine("[LeaderTweaks] initializing...");
+			var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+			Console.WriteLine($"[LeaderTweaks] version '{assemblyVersion}' initializing...");
 			var pluginDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			executableDirectory = Directory.GetParent(pluginDirectory).FullName;
 
