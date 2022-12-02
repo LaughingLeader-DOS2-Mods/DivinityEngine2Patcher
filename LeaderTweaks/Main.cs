@@ -65,8 +65,8 @@ namespace LeaderTweaks
 			//AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
 			harmony = new Harmony("laughingleader.leadertweaks");
-			FileLog.logPath = Path.Combine(pluginDirectory, "harmony.log");
-			System.IO.File.WriteAllText(FileLog.logPath, "");
+			Environment.SetEnvironmentVariable("HARMONY_LOG_FILE", Path.Combine(pluginDirectory, "harmony.log"));
+			System.IO.File.WriteAllText(FileLog.LogPath, "");
 			Harmony.DEBUG = true;
 
 			harmony.CreateClassProcessor(typeof(Initializer)).Patch();

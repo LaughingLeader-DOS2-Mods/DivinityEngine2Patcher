@@ -82,8 +82,8 @@
 			<Visible>false</Visible>
 			<Wz>1</Wz>
 		</PackageReference>
-		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
-		<PackageReference Include="Lib.Harmony" Version="2.1.1">
+		<PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+		<PackageReference Include="Lib.Harmony" Version="2.2.2">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
 	</ItemGroup>
