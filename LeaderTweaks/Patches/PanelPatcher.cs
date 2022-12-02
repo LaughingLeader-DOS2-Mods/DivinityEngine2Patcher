@@ -77,23 +77,20 @@ namespace LeaderTweaks.Patches
 		public static bool WallConstructionPanel_CreateRootTemplateClick_Fix(object A_0, EventArgs A_1, WallConstructionPanel __instance)
 		{
 			PanelService service = ToolFramework.Instance?.ServiceManagerInstance?.GetService<PanelService>();
-			if (service != null)
+			if (service?.GetPanel<CreateWallConstructionWizard>() == null && service.GetPanel<WallConstructionPanel>() == null)
 			{
-				if (service.GetPanel<CreateWallConstructionWizard>() == null)
+				WallConstructionPanel wallPanel = service.GetPanel<WallConstructionPanel>();
+				if (wallPanel != null)
 				{
-					WallConstructionPanel wallPanel = service.GetPanel<WallConstructionPanel>();
-					if (wallPanel != null)
+					EntityPanel.DBListView m_lstPalettes = p_m_lstPalettes.GetValue(wallPanel, null) as EntityPanel.DBListView;
+					EntityController controller = p_EntityPanel.GetValue(wallPanel, null) as EntityController;
+					if (controller != null && m_lstPalettes != null)
 					{
-						EntityPanel.DBListView m_lstPalettes = p_m_lstPalettes.GetValue(wallPanel, null) as EntityPanel.DBListView;
-						EntityController controller = p_EntityPanel.GetValue(wallPanel, null) as EntityController;
-						if (controller != null && m_lstPalettes != null)
-						{
-							ListViewItem listViewItem = m_lstPalettes.Items[m_lstPalettes.SelectedIndices[0]];
-							MWallConstruction construction = controller.Objects[(Guid)listViewItem.Tag] as MWallConstruction;
-							CreateWallConstructionWizard panel = new CreateWallConstructionWizard(construction);
-							service.AddPanel(panel, EDockState.Float);
-							service.Show(panel);
-						}
+						ListViewItem listViewItem = m_lstPalettes.Items[m_lstPalettes.SelectedIndices[0]];
+						MWallConstruction construction = controller.Objects[(Guid)listViewItem.Tag] as MWallConstruction;
+						CreateWallConstructionWizard panel = new CreateWallConstructionWizard(construction);
+						service.AddPanel(panel, EDockState.Float);
+						service.Show(panel);
 					}
 				}
 			}
@@ -106,12 +103,11 @@ namespace LeaderTweaks.Patches
 		*/
 		public static bool LevelPlugin_ExportSelectedToRootTemplate_Fix(object sender, MouseEventArgs e)
 		{
-			if (SelectionManager.Instance.CurrentSelection.Count == 1)
+			if (SelectionManager.Instance?.CurrentSelection?.Count == 1)
 			{
-				MGameObjectTemplate mgameObjectTemplate = (MGameObjectTemplate)SelectionManager.Instance.CurrentSelection[0];
-				if (mgameObjectTemplate != null && !mgameObjectTemplate.IsRootTemplate())
+				if (SelectionManager.Instance.CurrentSelection[0] is MGameObjectTemplate mgameObjectTemplate && !mgameObjectTemplate.IsRootTemplate())
 				{
-					PanelService service = ToolFramework.Instance.ServiceManagerInstance.GetService<PanelService>();
+					PanelService service = ToolFramework.Instance?.ServiceManagerInstance?.GetService<PanelService>();
 					if (service != null)
 					{
 						CreateObjectWizard panel = new CreateObjectWizard(mgameObjectTemplate);
