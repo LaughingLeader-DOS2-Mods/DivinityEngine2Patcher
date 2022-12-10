@@ -17,7 +17,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
     /* 
 	 * Removes the link break that gets incorrectly appended to the end.
 	*/
-    [LeaderPatcher("Clipboard.EntityPanel Tweaks")]
+    [LeaderPatcher("Clipboard.EntityPanel Tweaks", "Clipboard")]
 	public class ClipboardEntityPanel : IPatcher
 	{
 		public void Init(Harmony patcher)

@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("Panel Fixes")]
+	[LeaderPatcher("Panel Fixes", "Panels")]
 	public class PanelPatcher : IPatcher
 	{
 		public void Init(Harmony harmony)

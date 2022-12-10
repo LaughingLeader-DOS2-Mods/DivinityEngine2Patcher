@@ -13,7 +13,7 @@ using System.Text;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("RootTemplate Tweaks")]
+	[LeaderPatcher("Always Load RootTemplate Panel", "RootTemplatesPanel")]
 	public class RootTemplatesPatcher : IPatcher
 	{
 		public void Init(Harmony harmony)

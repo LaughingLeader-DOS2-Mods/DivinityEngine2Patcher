@@ -17,7 +17,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
     /* 
 	 * Removes the link break that gets incorrectly appended to the end.
 	*/
-    [LeaderPatcher("Clipboard.ContentBrowser Tweaks")]
+    [LeaderPatcher("Clipboard.ContentBrowser Tweaks", "Clipboard")]
 	public class ClipboardContentBrowser : IPatcher
 	{
 		public void Init(Harmony patcher)

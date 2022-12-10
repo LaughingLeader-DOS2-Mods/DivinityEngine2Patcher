@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace LeaderTweaks.Patches.ClipboardPatcher
 {
-    [LeaderPatcher("Clipboard.SelectionPanel Tweaks")]
+    [LeaderPatcher("Clipboard.SelectionPanel Tweaks", "Clipboard")]
 	public class ClipboardSelectionPanel : IPatcher
 	{
 		public void Init(Harmony patcher)

@@ -16,7 +16,7 @@ using System.Windows.Controls.Primitives;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("Project Settings")]
+	[LeaderPatcher("Project Settings Tweaks", "ProjectSettings")]
 	public class ProjectPatcher : IPatcher
 	{
 		private static Dictionary<string, PropertyInfo> MetaStringAttributes;

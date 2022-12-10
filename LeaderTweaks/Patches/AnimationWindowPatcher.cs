@@ -25,7 +25,7 @@ using LSToolFramework;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("Animation Window Fixes")]
+	[LeaderPatcher("Animation Window Fixes", "Resources")]
 	public class AnimationWindowPatcher : IPatcher
 	{
 		static readonly Type t_AnimationPreviewToolPanel = typeof(AnimationPreviewToolPanel);

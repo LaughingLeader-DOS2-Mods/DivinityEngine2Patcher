@@ -12,15 +12,14 @@ using System.Text;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("Disable Saves Patch")]
+	[LeaderPatcher("Disable Save Loading", "SaveLoading")]
 	public class DisableSavesPatcher : IPatcher
 	{
 		public void Init(Harmony patcher)
 		{
 			var pt = typeof(DisableSavesPatcher);
-			var t = typeof(BrowserPluginHelper);
 
-			patcher.Patch(AccessTools.Method(t, nameof(BrowserPluginHelper.SetupSaveGames)),
+			patcher.Patch(AccessTools.Method(typeof(BrowserPluginHelper), nameof(BrowserPluginHelper.SetupSaveGames)),
 				transpiler: new HarmonyMethod(AccessTools.Method(pt, nameof(DisableSavesPatcher.t_DisableSaveModuleLoading))));
 		}
 

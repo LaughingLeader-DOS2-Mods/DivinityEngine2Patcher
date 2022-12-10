@@ -1,4 +1,10 @@
 ﻿
+using EoCPlugin;
+
+using HarmonyLib;
+
+using LSFrameworkPlugin;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,19 +12,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
-using EoCPlugin;
-
-using HarmonyLib;
-
-using LeaderTweaks.Patches;
-
-using LSFrameworkPlugin;
-
-using LSToolFramework;
-
-using UiLibrary;
+using Tomlet;
 
 namespace LeaderTweaks
 {
@@ -33,6 +28,54 @@ namespace LeaderTweaks
 		private static readonly Type LeaderPatcherType = typeof(LeaderPatcherAttribute);
 		private static readonly Type IPatcherType = typeof(IPatcher);
 
+		public static Settings Settings { get; private set; }
+
+		public static void LoadSettings(string directory = "")
+		{
+			if(directory == "")
+			{
+				directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			}
+			var path = Path.Combine(directory, "settings.toml");
+			if(File.Exists(path))
+			{
+				try
+				{
+					var tomlString = File.ReadAllText(path, Encoding.UTF8);
+					Settings = TomletMain.To<Settings>(tomlString);
+				}
+				catch(Exception ex)
+				{
+					Helper.Log($"Failed to load settings at {path}:\n{ex}");
+				}
+			}
+			if(Settings == null)
+			{
+				Settings = new Settings();
+			}
+		}
+
+		public static void SaveSettings(string directory = "")
+		{
+			if (directory == "")
+			{
+				directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			}
+			var path = Path.Combine(directory, "settings.toml");
+			try
+			{
+				string tomlString = TomletMain.TomlStringFrom(Settings);
+				File.WriteAllText(path, tomlString, Encoding.UTF8);
+			}
+			catch (Exception ex)
+			{
+				Helper.Log($"Failed to save settings at {path}:\n{ex}");
+			}
+		}
+
+		private static Type _patchType = typeof(Settings.PatchDisableSettings);
+		private static Dictionary<string, PropertyInfo> _settingsIDToProp = new Dictionary<string, PropertyInfo>();
+
 		private static bool CanActivatePatcher(Type t)
 		{
 			if (t.IsClass && t.Namespace.StartsWith("LeaderTweaks.Patches") && IPatcherType.IsAssignableFrom(t))
@@ -46,7 +89,32 @@ namespace LeaderTweaks
 						return false;
 					}
 #endif
-					return patcherDetails.Enabled;
+					if (patcherDetails.Enabled)
+					{
+						if (!string.IsNullOrEmpty(patcherDetails.SettingsID))
+						{
+							PropertyInfo prop = null;
+							if (_settingsIDToProp.ContainsKey(patcherDetails.SettingsID))
+							{
+								prop = _settingsIDToProp.GetValueSafe(patcherDetails.SettingsID);
+							}
+							else
+							{
+								prop = _patchType.GetProperty(patcherDetails.SettingsID);
+								_settingsIDToProp.Add(patcherDetails.SettingsID, prop);
+							}
+							if(prop != null)
+							{
+								var disabled = (bool)prop.GetValue(Settings.DisablePatches, null);
+								if (disabled)
+								{
+									Helper.Log($"[DISABLED] '{patcherDetails.ID}' (DisablePatches.{patcherDetails.SettingsID})");
+									return false;
+								}
+							}
+						}
+						return true;
+					}
 				}
 				return true;
 			}
@@ -62,7 +130,13 @@ namespace LeaderTweaks
 			executableDirectory = Directory.GetParent(pluginDirectory).FullName;
 
 			//Console.WriteLine(String.Join(";", assemblyDirectories));
-			//AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+			AppDomain.CurrentDomain.AssemblyResolve += (object sender, ResolveEventArgs args) =>
+			{
+				string assemblyPath = Path.Combine(pluginDirectory, new AssemblyName(args.Name).Name + ".dll");
+				if (!File.Exists(assemblyPath)) return null;
+				Assembly assembly = Assembly.LoadFrom(assemblyPath);
+				return assembly;
+			};
 
 			harmony = new Harmony("laughingleader.leadertweaks");
 			Environment.SetEnvironmentVariable("HARMONY_LOG_FILE", Path.Combine(pluginDirectory, "harmony.log"));
@@ -70,6 +144,9 @@ namespace LeaderTweaks
 			Harmony.DEBUG = true;
 
 			harmony.CreateClassProcessor(typeof(Initializer)).Patch();
+
+			LoadSettings(pluginDirectory);
+			SaveSettings(pluginDirectory);
 			//harmony.CreateClassProcessor(typeof(KeyboardEventHooks)).Patch();
 		}
 
@@ -87,11 +164,11 @@ namespace LeaderTweaks
 			FileLog.GetBuffer(true);
 			if (Patchers.Count > 0)
 			{
-				Console.WriteLine("[LeaderTweaks] All patches enabled!");
+				Helper.Log($"[LeaderTweaks] Patches enabled: ({Patchers.Count})");
 			}
 			else
 			{
-				Console.WriteLine("[LeaderTweaks] No patches enabled.");
+				Helper.Log("[LeaderTweaks] No patches enabled.");
 			}
 			_initialized = true;
 		}

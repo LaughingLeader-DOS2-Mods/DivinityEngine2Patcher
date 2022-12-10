@@ -8,11 +8,13 @@ namespace LeaderTweaks
 	public class LeaderPatcherAttribute : Attribute
 	{
 		public string ID { get; set; }
+		public string SettingsID { get; set; }
 		public bool Enabled { get; set; } = true;
 		public bool DebugOnly { get; set; } = false;
-		public LeaderPatcherAttribute([System.Runtime.CompilerServices.CallerMemberName] string id = "")
+		public LeaderPatcherAttribute([System.Runtime.CompilerServices.CallerMemberName] string id = "", string settingsID = "")
 		{
 			ID = id;
+			SettingsID = settingsID;
 		}
 	}
 }

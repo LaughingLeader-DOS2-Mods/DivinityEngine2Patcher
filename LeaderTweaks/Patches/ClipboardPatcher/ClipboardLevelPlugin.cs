@@ -20,7 +20,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 {
 	//Right click options for objects in the level
 
-    [LeaderPatcher("Clipboard.LevelPlugin Tweaks")]
+    [LeaderPatcher("Clipboard.LevelPlugin Tweaks", "Clipboard")]
 	public class ClipboardLevelPlugin : IPatcher
 	{
 		public void Init(Harmony patcher)

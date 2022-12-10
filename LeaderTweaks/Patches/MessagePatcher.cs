@@ -16,7 +16,7 @@ using System.Globalization;
 
 namespace LeaderTweaks.Patches
 {
-	[LeaderPatcher("Message Log")]
+	[LeaderPatcher("Message Log Tweaks", "Messages")]
 	public class MessagePatcher : IPatcher
 	{
 		public static Dictionary<Regex, Brush> PatternColors = new Dictionary<Regex, Brush>();
@@ -40,6 +40,11 @@ namespace LeaderTweaks.Patches
 				transpiler: new HarmonyMethod(AccessTools.Method(pt, nameof(MessagePatcher.t_GetTextColor))));
 			patcher.Patch(AccessTools.Method(typeof(MessageService), "AddMessage"),
 				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(MessagePatcher.AddMessage))));
+
+			if(Main.Settings.IgnoreLogMessages.Count > 0)
+			{
+				IgnoreMessages.AddRange(Main.Settings.IgnoreLogMessages.Select(x => new Regex(x, defaultRO)));
+			}
 		}
 
 		static Brush GetCategoryColor(EMessageCategory category)
