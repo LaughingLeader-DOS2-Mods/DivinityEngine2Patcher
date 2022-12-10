@@ -133,6 +133,7 @@ namespace LeaderTweaks.Patches
 			new Regex(@"\[eoc::GetStatusTranslatedName\]", defaultRO),
 			new Regex("does not have a race", defaultRO),
 			new Regex(".*networkfixedstrings.*", defaultRO),
+			new Regex("Effect '.*?' cache overflow", defaultRO),
 		};
 
 		public static bool AddMessage(string msg, EMessageType type, EMessageCategory cat, string extrainfo, bool persistent,
