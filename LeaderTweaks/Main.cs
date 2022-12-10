@@ -35,7 +35,7 @@ namespace LeaderTweaks
 
 		private static bool CanActivatePatcher(Type t)
 		{
-			if (t.IsClass && t.Namespace == "LeaderTweaks.Patches" && IPatcherType.IsAssignableFrom(t))
+			if (t.IsClass && t.Namespace.StartsWith("LeaderTweaks.Patches") && IPatcherType.IsAssignableFrom(t))
 			{
 				LeaderPatcherAttribute patcherDetails = Attribute.GetCustomAttribute(t, LeaderPatcherType) as LeaderPatcherAttribute;
 				if (patcherDetails != null)
