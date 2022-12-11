@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LeaderTweaks
 {
@@ -69,5 +70,12 @@ namespace LeaderTweaks
 
             return (length < value.Length) ? value.Substring(value.Length - length) : value;
         }
+
+        static readonly Regex _uuidPattern = new Regex("[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}", RegexOptions.IgnoreCase);
+
+        public static bool IsUUID4([NotNull] this string value)
+        {
+            return _uuidPattern.IsMatch(value);
+		}
     }
 }

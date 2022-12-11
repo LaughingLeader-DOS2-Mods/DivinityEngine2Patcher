@@ -39,6 +39,9 @@ namespace LeaderTweaks
 			[TomlPrecedingComment("Fixes various resource issues, such as physics previewing without a level loaded crashing the editor, the animation window being broken ('read-only' despite being a resource in the project), and certain resources always being 'inherited'/undeletable despite being local to the project.")]
 			public bool Resources { get; set; }
 
+			[TomlPrecedingComment("Makes new lsf resources be named Name_GUID.lsf, so they can be easily found again.")]
+			public bool ResourceNaming { get; set; }
+
 			[TomlPrecedingComment("Fixes various issues with panels, such as options being broken (create prefab, wall construction, export to root template, tile set creation).")]
 			public bool Panels { get; set; }
 

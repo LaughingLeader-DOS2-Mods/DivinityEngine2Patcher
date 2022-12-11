@@ -18,36 +18,22 @@ namespace LeaderTweaks.Patches
 		public void Init(Harmony harmony)
 		{
 			var pt = typeof(ResourcePatcher);
+			var rt = typeof(Resource);
 			
 			harmony.Patch(AccessTools.PropertyGetter(typeof(PhysicsResource), nameof(PhysicsResource.ImageIndex)), 
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.ImageIndex))));
 
-			var t1 = typeof(Resource);
-			harmony.Patch(AccessTools.PropertyGetter(t1, nameof(Resource.Valid)),
+			harmony.Patch(AccessTools.PropertyGetter(rt, nameof(Resource.Valid)),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.Valid))));
-			harmony.Patch(AccessTools.Method(t1, nameof(Resource.GetSingleFileName), new Type[] { }), 
+
+			harmony.Patch(AccessTools.Method(rt, nameof(Resource.GetSingleFileName), new Type[] { }),
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.GetSingleFileName))));
+
 			harmony.Patch(AccessTools.PropertyGetter(typeof(EditableObject), nameof(EditableObject.Inherited)), 
 				postfix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.GetInherited))));
 
-			harmony.Patch(AccessTools.Method(typeof(ResourceBank), nameof(ResourceBank.Save)), 
-				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.OnResourceBankSave))));
-
 			harmony.Patch(AccessTools.Method(typeof(AnimationsDialog), "OnFindingResourceReferences"), 
 				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourcePatcher.OnFindingResourceReferences))));
-		}
-
-		//Fixes resources always being saved as GUID.lsf, ignoring their current filename.
-		public static void GetSingleFileName(ref string __result, Resource __instance)
-		{
-			if (!String.IsNullOrWhiteSpace(__instance.FileName))
-			{
-				if(!__instance.FileName.EndsWith(".lsf", StringComparison.OrdinalIgnoreCase))
-				{
-					__instance.FileName = Path.ChangeExtension(__instance.FileName, ".lsf");
-				}
-				__result = __instance.FileName;
-			}
 		}
 
 		//Fix for physics resources crashing upon previewing, if no level is loaded
@@ -119,18 +105,50 @@ namespace LeaderTweaks.Patches
 			return false;
 		}
 
+		//Fixes resources always being saved as GUID.lsf, ignoring their current filename.
+		public static void GetSingleFileName(ref string __result, Resource __instance)
+		{
+			if (!String.IsNullOrWhiteSpace(__instance.FileName))
+			{
+				if (!Path.GetExtension(__instance.FileName).Equals(".lsf", StringComparison.OrdinalIgnoreCase))
+				{
+					__instance.FileName = Path.ChangeExtension(__instance.FileName, ".lsf");
+				}
+				__result = __instance.FileName;
+			}
+		}
+	}
+
+	[LeaderPatcher("Resource Name Tweaks", "ResourceNaming")]
+	public class ResourceNamePatcher : IPatcher
+	{
+		public void Init(Harmony harmony)
+		{
+			var pt = typeof(ResourceNamePatcher);
+
+			harmony.Patch(AccessTools.Method(typeof(ResourceBank), nameof(ResourceBank.Save)),
+				prefix: new HarmonyMethod(AccessTools.Method(pt, nameof(ResourceNamePatcher.OnResourceBankSave))));
+		}
+
 		//Making new resources be named Name_UUID.lsf by default
 		public static void OnResourceBankSave(ResourceBank __instance, Dictionary<System.Guid, Resource> ___m_Resources)
 		{
-			foreach(var resource in ___m_Resources.Values)
+			try
 			{
-				//New files only
-				if(resource.Dirty && !File.Exists(resource.FileName))
+				foreach (var resource in ___m_Resources.Values)
 				{
-					var resourceDir = Directory.GetParent(resource.FileName).FullName;
-					resource.FileName = Path.Combine(resourceDir, $"{resource.Name}_{resource.GUID}.lsf");
-					Helper.Log($"Renaming new resource to '{resource.FileName}' (Name_GUID), for sanity.");
+					//New files only
+					if (resource.Dirty && !File.Exists(resource.FileName) && Path.GetExtension(resource.FileName).Equals(".lsf", StringComparison.OrdinalIgnoreCase) && resource.Name.IsUUID4())
+					{
+						var resourceDir = Directory.GetParent(resource.FileName).FullName;
+						resource.FileName = Path.Combine(resourceDir, $"{resource.Name}_{resource.GUID}.lsf");
+						Helper.Log($"Renaming new resource to '{resource.FileName}' (Name_GUID), for sanity.");
+					}
 				}
+			}
+			catch(Exception ex)
+			{
+				Helper.Log($"Error renaming new resources:\n'{ex}");
 			}
 		}
 	}
