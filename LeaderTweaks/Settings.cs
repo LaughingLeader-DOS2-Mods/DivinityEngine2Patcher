@@ -16,6 +16,9 @@ namespace LeaderTweaks
 		[TomlPrecedingComment("Specific patches to disable.")]
 		public PatchDisableSettings DisablePatches { get; set; }
 
+		[TomlPrecedingComment("Force-rename the game window tab to use the provided name (ex. 'Game' instead of 'Eyes of a Child'). This requires the 'Panels' patch to be enabled.")]
+		public string GameWindowName { get; set; } = "Game";
+
 		public class PatchDisableSettings
 		{
 			[TomlPrecedingComment("Disable the editor's ability to load saves. This can speed up loading, due to the fact the editor will try to instantiate mods stored in saves for the active profile.")]

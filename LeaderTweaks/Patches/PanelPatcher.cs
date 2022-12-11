@@ -46,7 +46,11 @@ namespace LeaderTweaks.Patches
 		{
 			if (title.Contains("Eyes of"))
 			{
-				title = "Game";
+				var desiredTitle = Main.Settings.GameWindowName;
+				if (desiredTitle != null)
+				{
+					title = desiredTitle;
+				}
 			}
 		}
 
