@@ -1,18 +1,16 @@
 ﻿using HarmonyLib;
 
-using EoCPlugin;
-using System;
+using LSToolFramework;
+
+using MessagePlugin;
+using MessagePlugin.Notifications;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using MessagePlugin;
-using LSToolFramework;
-using MessagePlugin.Notifications;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
-using System.Globalization;
 
 namespace LeaderTweaks.Patches
 {

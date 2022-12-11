@@ -44,11 +44,19 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 			{
 				item.Text = "Copy Name_GUID to clipboard";
 			}
+			else if (item.Name == "TypeNameGUID")
+			{
+				item.Text = "Copy Type_Name_GUID to clipboard";
+			}
 		}
 
 		private static Entity EntityFromItem(EntityController controller, ListViewItem item)
 		{
-			return controller.Objects[(Guid)item.Tag];
+			if (item.Tag is Guid guid && controller.Objects.TryGetValue(guid, out var entry))
+			{
+				return entry;
+			}
+			return null;
 		}
 
 		private static bool GetSelectedOutput(EntityController controller, ListView lv, ResourceClipboardOutputType outputType, out string output)
@@ -58,21 +66,17 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 			if (count <= 0)
 				return false;
 
+			var selectedItems = ResourceTools.GetSelectedItems<ListViewItem>(lv);
+
 			if (count > 1)
 			{
-				output = string.Join(Environment.NewLine, ResourceTools.GetSelectedItems<ListViewItem>(lv).Select(x => ResourceTools.GetOutput(EntityFromItem(controller, x), outputType)));
-				return true;
+				output = string.Join(Environment.NewLine, selectedItems.Select(x => ResourceTools.GetOutput(EntityFromItem(controller, x), outputType)));
 			}
 			else
 			{
-				if (lv.SelectedItems[0] is ListViewItem item)
-				{
-
-					output = ResourceTools.GetOutput(EntityFromItem(controller, item), outputType);
-					return true;
-				}
+				output = ResourceTools.GetOutput(EntityFromItem(controller, selectedItems.First()), outputType);
 			}
-			return false;
+			return true;
 		}
 
 		public static bool CopyGUID(ListView ___m_lstPalettes, EntityController ___m_Controller)

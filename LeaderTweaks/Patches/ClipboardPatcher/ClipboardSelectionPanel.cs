@@ -63,10 +63,12 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 			if (count <= 0)
 				return false;
 
+			var selectedItems = ResourceTools.GetSelectedItems<ListViewItem>(lv);
+
 			if (count > 1)
 			{
 				var selectedEntities = new List<string>();
-				foreach(var item in ResourceTools.GetSelectedItems<ListViewItem>(lv))
+				foreach(var item in selectedItems)
 				{
 					if(TryGetEntityFromItem(entities, item, out var entity))
 					{
@@ -78,7 +80,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 			}
 			else
 			{
-				if (lv.SelectedItems[0] is ListViewItem item && TryGetEntityFromItem(entities, item, out var entity))
+				if (TryGetEntityFromItem(entities, selectedItems.First(), out var entity))
 				{
 					output = ResourceTools.GetOutput(entity, outputType);
 					return true;

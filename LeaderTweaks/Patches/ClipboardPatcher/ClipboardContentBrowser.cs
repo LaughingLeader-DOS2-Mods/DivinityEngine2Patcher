@@ -57,21 +57,17 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 			if (count <= 0)
 				return false;
 
+			var selectedItems = ResourceTools.GetSelectedItems<ContentBrowserListViewItem>(lv);
+
 			if (count > 1)
 			{
-				output = string.Join(Environment.NewLine, ResourceTools.GetSelectedItems<ContentBrowserListViewItem>(lv).Select(x => ResourceTools.GetOutput(x.ResourceRef, outputType)));
-				return true;
+				output = string.Join(Environment.NewLine, selectedItems.Select(x => ResourceTools.GetOutput(x.ResourceRef, outputType)));
 			}
 			else
 			{
-				if (lv.SelectedItems[0] is ContentBrowserListViewItem item)
-				{
-
-					output = ResourceTools.GetOutput(item.ResourceRef, outputType);
-					return true;
-				}
+				output = ResourceTools.GetOutput(selectedItems.First().ResourceRef, outputType);
 			}
-			return false;
+			return true;
 		}
 
 		public static bool CopyGUID(ListView ___m_List)

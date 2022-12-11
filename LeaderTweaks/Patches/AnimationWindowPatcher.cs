@@ -1,27 +1,15 @@
-﻿using EoCPlugin;
+﻿using HarmonyLib;
 
-using EoCPluginCSharp;
-
-using HarmonyLib;
+using LeaderTweaks.Win32.Constants;
 
 using LSFrameworkPlugin;
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Runtime.InteropServices;
 using Synchronization.Controls;
 
-using LeaderTweaks.Win32.Constants;
-using LeaderTweaks.Win32;
-using LSToolFramework;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace LeaderTweaks.Patches
 {
@@ -132,14 +120,7 @@ namespace LeaderTweaks.Patches
 			__instance.Activated += (s, e) =>
 			{
 				__instance.TopMost = false;
-
-				//var previewPanel = f_m_AnimationPreviewPanel.GetValue(s);
-				//if (previewPanel != null && previewPanel is DockContent m_AnimationPreviewPanel)
-				//{
-				//	m_AnimationPreviewPanel.TopMost = false;
-				//}
 			};
-			//User32.SetWindowPos(__instance.Handle, HWND.NoTopMost, 0, 0, 0, 0, PreviewFlags);
 		}
 
 		public static void AnimationsDialog_DisableTopMost(AnimationsDialog __instance)

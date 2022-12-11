@@ -22,12 +22,12 @@ namespace LeaderTweaks.Util
             switch (outputType)
             {
                 case ResourceClipboardOutputType.TypeNameGUID:
-                    return res.GUID.ToString();
+                    return $"{res.TypeId.ToUpperInvariant().Replace(" ", "_")}_{res.Name}_{res.GUID}";
                 case ResourceClipboardOutputType.NameGUID:
                     return $"{res.Name}_{res.GUID}";
                 case ResourceClipboardOutputType.GUID:
                 default:
-                    return $"{res.TypeId.ToUpperInvariant()}_{res.Name}_{res.GUID}";
+                    return res.GUID.ToString();
             }
         }
 
@@ -36,12 +36,12 @@ namespace LeaderTweaks.Util
             switch (outputType)
             {
                 case ResourceClipboardOutputType.TypeNameGUID:
-                    return res.GUID.ToString();
+                    return $"{res.TypeId.ToUpperInvariant().Replace(" ", "_")}_{res.Name}_{res.GUID}";
                 case ResourceClipboardOutputType.NameGUID:
                     return $"{res.Name}_{res.GUID}";
                 case ResourceClipboardOutputType.GUID:
                 default:
-                    return $"{res.TypeId.ToUpperInvariant()}_{res.Name}_{res.GUID}";
+                    return res.GUID.ToString();
             }
         }
 
@@ -50,7 +50,7 @@ namespace LeaderTweaks.Util
             switch (outputType)
             {
                 case ResourceClipboardOutputType.TypeNameGUID:
-                    return $"{res.TypeId.ToUpperInvariant()}_{res.Name}_{res.GUID}";
+                    return $"{res.TypeId.ToUpperInvariant().Replace(" ", "_")}_{res.Name}_{res.GUID}";
                 case ResourceClipboardOutputType.NameGUID:
                     return $"{res.Name}_{res.GUID}";
                 case ResourceClipboardOutputType.GUID:
@@ -65,7 +65,8 @@ namespace LeaderTweaks.Util
             var count = lv.SelectedIndices.Count;
             for (int i = 0; i < count; i++)
             {
-                if (lv.Items[i] is T item)
+                int index = lv.SelectedIndices[i];
+                if (lv.Items[index] is T item)
                 {
                     items.Add(item);
                 }

@@ -80,7 +80,6 @@ namespace LeaderTweaks.Patches
 			}
 			if (insertAt > -1)
 			{
-				//Replacing the Click += OpenSettings code
 				code[insertAt - 2] = new CodeInstruction(OpCodes.Call, m_ProjectAddClickEvent);
 				code[insertAt - 1] = new CodeInstruction(OpCodes.Nop);
 				code[insertAt] = new CodeInstruction(OpCodes.Nop);

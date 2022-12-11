@@ -73,13 +73,12 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 			if (count > 1)
 			{
 				output = string.Join(Environment.NewLine, selectedItems.Select(x => ResourceTools.GetOutput(x, outputType)));
-				return true;
 			}
 			else
 			{
 				output = ResourceTools.GetOutput(selectedItems.First(), outputType);
-				return true;
 			}
+			return true;
 		}
 
 		public static bool CopyGUID()

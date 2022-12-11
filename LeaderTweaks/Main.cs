@@ -129,7 +129,6 @@ namespace LeaderTweaks
 			var pluginDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			executableDirectory = Directory.GetParent(pluginDirectory).FullName;
 
-			//Console.WriteLine(String.Join(";", assemblyDirectories));
 			AppDomain.CurrentDomain.AssemblyResolve += (object sender, ResolveEventArgs args) =>
 			{
 				string assemblyPath = Path.Combine(pluginDirectory, new AssemblyName(args.Name).Name + ".dll");
