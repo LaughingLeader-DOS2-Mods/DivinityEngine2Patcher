@@ -8,9 +8,13 @@ Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/release
 
 ## Installation
 
-[Check the releases section for an installation guide.](https://github.com/LaughingLeader-DOS2-Mods/DivinityEngine2Patcher/releases)
+[Check the releases section for an installation guide.](https://github.com/LaughingLeader-DOS2-Mods/DivinityEngine2Patcher/releases/latest)
 
-## Leader Tweaks Fixes/Changes
+## Fixes/Changes
+
+### Disable Save Loading  
+
+The editor attempts to instantiate modules stored in all of the active profile's saves. This can increase loading times, and previously the workaround was to move  all of your saves out of your profile folder. This functionality is now disabled by default, but it can be re-enabled in `Patches/settings.toml`.
 
 ### Add Resource Wizard (Content Browser)
 
@@ -31,10 +35,11 @@ Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/release
 * Messages now have varying colors, instead of all being red, yellow, or white.
 * Osiris debug text displays as [Osiris] now, instead of "Osiris triggered an assert".
 * Various warning spam messages no longer show up (like "filename x does not exist, can't load mod!").
+* Additional messages can be ignored by editing the settings file (Patches/settings.toml - launch the editor with the patcher enabled to generate this).
 
 ### Panel Tweaks
 
-* The "Eyes of a Child" game window is now renamed to simply "Game", taking up significantly less tab space.
+* The "Eyes of a Child" game window is now renamed to simply "Game", taking up significantly less tab space. This name can be changed in the settings.
 * Incorporated Norbyte's fixes, including:
   * Fixed the Wall Construction Wizard.
   * Fixed the "Create Prefab" option in the context menu.
@@ -56,5 +61,14 @@ Requires [Norbyte's Script Extender](https://github.com/Norbyte/ositools/release
 
 This panel will now load after a project is loaded, allowing you to make changes without needing to load a level.
 
+### Clipboard Actions  
 
+All the various "Copy GUID to clipboard", "Copy <Name> GUID to clipboard" etc actions have been tweaked for consistency.
 
+When copying a single entry, the editor would add an extra line break (this may have been dependent on which UI was doing the copying). This has been fixed.
+
+Additionally `<Name> GUID` is now copied as `Name_GUID`, and `Type Name_GUID` is now copied as `Type_Name_GUID`.
+
+## Settings
+
+`Patches/settings.toml` will be generated when the patcher runs, if it doesn't already exist. In this file you can disable specific patchers, and tweak some additional options, such as adding more message log text patterns to ignore.
