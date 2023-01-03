@@ -83,7 +83,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 		{
 			if (GetSelectedOutput(___m_Controller, ___m_lstPalettes, ResourceClipboardOutputType.GUID, out var output))
 			{
-				Clipboard.SetDataObject(output, true);
+				System.Windows.Clipboard.SetDataObject(output, true);
 			}
 			return false;
 		}
@@ -92,7 +92,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 		{
 			if (GetSelectedOutput(___m_Controller, ___m_lstPalettes, ResourceClipboardOutputType.NameGUID, out var output))
 			{
-				Clipboard.SetDataObject(output, true);
+				System.Windows.Clipboard.SetDataObject(output, true);
 			}
 			return false;
 		}
@@ -101,7 +101,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 		{
 			if (GetSelectedOutput(___m_Controller, ___m_lstPalettes, ResourceClipboardOutputType.TypeNameGUID, out var output))
 			{
-				Clipboard.SetDataObject(output, true);
+				System.Windows.Clipboard.SetDataObject(output, true);
 			}
 			return false;
 		}

@@ -93,7 +93,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 		{
 			if (GetSelectedOutput(___ItemList, ___m_Items, ResourceClipboardOutputType.GUID, out string output))
 			{
-				Clipboard.SetDataObject(output, true);
+				System.Windows.Clipboard.SetDataObject(output, true);
 			}
 			return false;
 		}
@@ -102,7 +102,7 @@ namespace LeaderTweaks.Patches.ClipboardPatcher
 		{
 			if (GetSelectedOutput(___ItemList, ___m_Items, ResourceClipboardOutputType.NameGUID, out string output))
 			{
-				Clipboard.SetDataObject(output, true);
+				System.Windows.Clipboard.SetDataObject(output, true);
 			}
 			return false;
 		}
